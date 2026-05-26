@@ -390,12 +390,12 @@ def analyze_gap(df, selected_skills):
 col_header_title, col_header_logo = st.columns([5, 1])
 with col_header_title:
     st.markdown("<h1 style='margin-bottom:0px; color:#0f172a; font-family: Outfit;'>Analisis Kesenjangan Keterampilan Lulusan (Skill Gap Index)</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#475569; font-size:16px; margin-top:2px; font-weight: 500;'>Politeknik Negeri Madiun — Evaluasi Keselarasan Kurikulum dengan Kebutuhan Riil Industri</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#475569; font-size:16px; margin-top:2px; font-weight: 500;'>Evaluasi Keselarasan Standar Kurikulum Akademis (O*NET) dengan Kebutuhan Riil Pasar Kerja Industri (LinkedIn & Adzuna API)</p>", unsafe_allow_html=True)
 with col_header_logo:
     st.markdown("""
     <div style='background-color:rgba(79, 70, 229, 0.08); border:1px solid rgba(79, 70, 229, 0.15); border-radius:12px; padding:10px; text-align:center;'>
-        <span style='color:#4f46e5; font-weight:800; font-size:14px; display:block; font-family: "Outfit";'>POLITEKNIK</span>
-        <span style='color:#334155; font-weight:600; font-size:10px; display:block; font-family: "Outfit";'>NEGERI MADIUN</span>
+        <span style='color:#4f46e5; font-weight:800; font-size:14px; display:block; font-family: "Outfit";'>O*NET VS</span>
+        <span style='color:#334155; font-weight:600; font-size:10px; display:block; font-family: "Outfit";'>INDUSTRY</span>
     </div>
     """, unsafe_allow_html=True)
 
