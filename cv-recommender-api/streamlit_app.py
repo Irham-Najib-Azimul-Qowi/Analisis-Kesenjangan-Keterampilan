@@ -6,12 +6,16 @@ Semester 4 Politeknik Negeri Madiun
 """
 
 import os
-import requests
+import io
+import pdfplumber
 import pandas as pd
 import numpy as np
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
+
+from app.config import settings
+from app.pipeline import CVAnalysisPipeline
 
 # ==============================================================================
 # 🎨 1. CUSTOM DESIGN SYSTEM STYLING
@@ -124,94 +128,24 @@ DEFAULT_SKILLS = [
 ]
 
 # ==============================================================================
-# 📥 2. API REQUEST UTILITIES
+# 🧠 2. AI PIPELINE INITIALIZATION
 # ==============================================================================
-def test_api_health(api_url):
-    """Memeriksa kesehatan endpoint API."""
-    try:
-        response = requests.get(f"{api_url}/health", timeout=3)
-        if response.status_code == 200:
-            data = response.json()
-            return True, f"API Aktif (Model Terpasang: {data.get('model_loaded', False)})"
-        return False, f"API Error (HTTP {response.status_code})"
-    except Exception as e:
-        return False, "API Offline / Tidak Terhubung"
+@st.cache_resource(show_spinner="Sedang memuat AI Models (BERT & FAISS)...")
+def load_pipeline():
+    return CVAnalysisPipeline(
+        model_dir=settings.MODEL_DIR,
+        embedding_model_name=settings.EMBEDDING_MODEL,
+    )
 
-def fetch_api_roles(api_url):
-    """Mendapatkan daftar role yang didukung dari backend API."""
-    try:
-        response = requests.get(f"{api_url}/roles", timeout=3)
-        if response.status_code == 200:
-            return response.json().get("roles", DEFAULT_ROLES)
-    except:
-        pass
-    return DEFAULT_ROLES
+try:
+    pipeline = load_pipeline()
+    roles_options = list(pipeline.job_profiles.keys())
+except Exception as e:
+    st.error(f"Gagal memuat model AI: {e}")
+    st.stop()
 
-def send_analyze_pdf(api_url, file_bytes, filename, target_role, top_k, api_key):
-    """Kirim file PDF CV ke endpoint API."""
-    headers = {}
-    if api_key:
-        headers["X-API-Key"] = api_key
-    
-    files = {"file": (filename, file_bytes, "application/pdf")}
-    data = {"target_role": target_role, "top_k": int(top_k)}
-    
-    response = requests.post(f"{api_url}/analyze/pdf", files=files, data=data, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        try:
-            err_detail = response.json().get("detail", response.text)
-        except:
-            err_detail = response.text
-        raise Exception(f"Error {response.status_code}: {err_detail}")
 
-def send_analyze_text(api_url, cv_text, target_role, top_k, api_key):
-    """Kirim teks CV ke endpoint API."""
-    headers = {"Content-Type": "application/json"}
-    if api_key:
-        headers["X-API-Key"] = api_key
-        
-    payload = {
-        "cv_text": cv_text,
-        "target_role": target_role,
-        "top_k": int(top_k)
-    }
-    
-    response = requests.post(f"{api_url}/analyze/text", json=payload, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        try:
-            err_detail = response.json().get("detail", response.text)
-        except:
-            err_detail = response.text
-        raise Exception(f"Error {response.status_code}: {err_detail}")
-
-def send_analyze_structured(api_url, skills, experience_years, education, target_role, summary, api_key):
-    """Kirim profil terstruktur ke endpoint API."""
-    headers = {"Content-Type": "application/json"}
-    if api_key:
-        headers["X-API-Key"] = api_key
-        
-    payload = {
-        "skills": skills,
-        "experience_years": int(experience_years),
-        "education": education,
-        "target_role": target_role,
-        "summary": summary
-    }
-    
-    response = requests.post(f"{api_url}/analyze/structured", json=payload, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        try:
-            err_detail = response.json().get("detail", response.text)
-        except:
-            err_detail = response.text
-        raise Exception(f"Error {response.status_code}: {err_detail}")
-
+role_mapping = {r: r.replace("_", " ").title() for r in roles_options}
 
 # ==============================================================================
 # 🖥️ 3. STREAMLIT USER INTERFACE
@@ -223,33 +157,6 @@ st.markdown("""
 Dashboard ini dirancang untuk melakukan **Analisis Kesiapan Skill** Terhadap Standar Jabatan & memberikan **Rekomendasi Lowongan Kerja** Semantik Terdekat berbasis model FAISS + BERT.
 """)
 st.divider()
-
-# ================= SIDEBAR =================
-st.sidebar.title("⚙️ Konfigurasi API")
-st.sidebar.markdown("Atur konfigurasi API server Anda di bawah ini.")
-
-default_backend = os.getenv("BACKEND_URL", "http://localhost:8080")
-api_host = st.sidebar.text_input("Host API Backend:", value=default_backend, help="Tentukan alamat host server FastAPI Anda.")
-api_key = st.sidebar.text_input("X-API-Key (Jika Diperlukan):", type="password", help="Masukkan API Key jika backend Anda diamankan.")
-
-# Connection check
-is_connected, conn_msg = test_api_health(api_host)
-if is_connected:
-    st.sidebar.success(f"{conn_msg}")
-else:
-    st.sidebar.error(f"{conn_msg}")
-
-st.sidebar.divider()
-st.sidebar.info("""
-**Panduan Menjalankan API:**\n
-`uvicorn app.main:app --port 8080 --reload`\n
-Pastikan model binary seperti `faiss_job_index.bin` telah diunduh di dalam folder `models/`.
-""")
-
-# Fetch roles dynamically
-roles_options = fetch_api_roles(api_host)
-role_mapping = {r: r.replace("_", " ").title() for r in roles_options}
-
 # Session state initialization for holding results
 if "analysis_result" not in st.session_state:
     st.session_state.analysis_result = None
@@ -317,14 +224,18 @@ with st.container(border=True):
                 with st.spinner("Mengunggah file PDF dan menjalankan analisis..."):
                     try:
                         file_bytes = uploaded_file.read()
-                        res = send_analyze_pdf(
-                            api_host, 
-                            file_bytes, 
-                            uploaded_file.name, 
-                            selected_role_key, 
-                            top_k_val, 
-                            api_key
-                        )
+                        text_pages = []
+                        with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+                            for page in pdf.pages:
+                                t = page.extract_text()
+                                if t:
+                                    text_pages.append(t)
+                        cv_text = "\\n".join(text_pages)
+                        if len(cv_text.strip()) < 20:
+                            st.error("PDF tidak mengandung teks yang cukup")
+                            st.stop()
+                        
+                        res = pipeline.analyze(cv_text, selected_role_key, top_k_val)
                         st.session_state.analysis_result = res
                         st.success("Analisis berhasil diselesaikan!")
                     except Exception as e:
@@ -373,15 +284,12 @@ with st.container(border=True):
             else:
                 with st.spinner("Menghitung skor indeks kecocokan..."):
                     try:
-                        res = send_analyze_structured(
-                            api_host,
-                            selected_skills,
-                            exp_years,
-                            education_val,
-                            selected_role_key,
-                            summary_text,
-                            api_key
-                        )
+                        cv_text = f"""
+                        Professional with {exp_years} years of experience.
+                        Education: {education_val}. Target: {selected_role_key}.
+                        Skills: {", ".join(selected_skills)}. {summary_text}
+                        """
+                        res = pipeline.analyze(cv_text.strip(), selected_role_key)
                         st.session_state.analysis_result = res
                         st.success("Analisis terstruktur berhasil diselesaikan!")
                     except Exception as e:
