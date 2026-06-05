@@ -17,9 +17,5 @@ env/
 .DS_Store
 Thumbs.db
 
-# Model artifacts (opsional: jika Anda ingin commit langsung ke Git)
-models/*.bin
-models/*.csv
-
 # Logs
 *.log

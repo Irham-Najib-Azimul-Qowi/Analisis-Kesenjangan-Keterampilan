@@ -1,14 +1,16 @@
-# Folder ini berisi artefak model dari Google Colab (Part 1-5)
-# 
-# File yang harus ada di sini sebelum menjalankan API:
-#   - faiss_job_index.bin       (dari Part 3)
-#   - job_metadata.csv          (dari Part 3)
-#   - job_role_profiles.json    (dari Part 4)
-#   - skill_taxonomy.json       (dari Part 4)
-#   - model_config.json         (dari Part 3)
-#   - assessment_config.json    (dari Part 4)
-#
-# Cara mendapatkan file-file ini:
-#   1. Jalankan Part 1-5 di Google Colab
-#   2. Download semua file di atas dari Colab
-#   3. Taruh di folder models/ ini
+# Model Artifacts
+
+Folder ini berisi artefak model ML yang dihasilkan dari notebook `Machine_Learning.ipynb` (Part 1-5).
+
+## Daftar File
+
+| File | Sumber | Keterangan |
+|------|--------|------------|
+| `faiss_job_index.bin` | Part 3 | Indeks FAISS untuk pencarian semantik lowongan |
+| `job_metadata.csv` | Part 3 | Metadata lowongan kerja (judul, lokasi, dll) |
+| `job_role_profiles.json` | Part 4 | Profil skill standar per peran pekerjaan |
+| `skill_taxonomy.json` | Part 4 | Kamus/taksonomi skill per kategori |
+| `model_config.json` | Part 3 | Konfigurasi model embedding |
+| `assessment_config.json` | Part 4 | Konfigurasi penilaian skill |
+
+> **Catatan:** File `faiss_job_index.bin` disimpan menggunakan Git LFS karena ukurannya ~160MB.

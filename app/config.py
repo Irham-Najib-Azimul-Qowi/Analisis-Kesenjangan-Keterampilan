@@ -5,10 +5,6 @@ import os
 class Settings:
     """Application settings loaded from environment variables."""
 
-    GCP_PROJECT_ID: str = os.getenv("GCP_PROJECT_ID", "")
-    GCS_BUCKET_NAME: str = os.getenv("GCS_BUCKET_NAME", "")
-    GCS_MODEL_PREFIX: str = os.getenv("GCS_MODEL_PREFIX", "cv-recommender/v1/artifacts")
-
     API_HOST: str = os.getenv("API_HOST", "0.0.0.0")
     API_PORT: int = int(os.getenv("API_PORT", "8080"))
     ALLOWED_ORIGINS: list = os.getenv(
