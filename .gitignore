@@ -1,18 +1,3 @@
-# Python cache
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Environments
-.venv/
-venv/
-ENV/
-env/
-
-# Streamlit local configs/secrets (just in case)
-.streamlit/secrets.toml
-
-# OS generated files
-.DS_Store
-Thumbs.db
-postings.csv
+/*
+!/Gap Analysis/
+!/.gitignore
