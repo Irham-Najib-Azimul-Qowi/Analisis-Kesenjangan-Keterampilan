@@ -37,12 +37,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Path data
-DATA_PATH = r"d:\TUGAS\DataEngineer\datasets\skill_gap_analysis.csv"
+DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "skill_gap_analysis.csv")
 
 @st.cache_data
-def load_data():
-    if os.path.exists(DATA_PATH):
-        df = pd.read_csv(DATA_PATH)
+def load_data(file_path, mtime):
+    if os.path.exists(file_path):
+        df = pd.read_csv(file_path)
     else:
         # Data dummy jika file belum di-generate
         df = pd.DataFrame({
@@ -66,7 +66,10 @@ def load_data():
         
     return df
 
-df = load_data()
+# Deteksi waktu modifikasi untuk invalidasi cache
+mtime = os.path.getmtime(DATA_PATH) if os.path.exists(DATA_PATH) else 0
+df = load_data(DATA_PATH, mtime)
+
 
 # ================= SIDEBAR =================
 st.sidebar.title("🔍 Filter Data")
@@ -168,10 +171,10 @@ if not df_chart.empty:
     # Mengurutkan dari atas ke bawah berdasarkan data awal
     fig.update_layout(yaxis={'categoryorder':'array', 'categoryarray': df_chart['nama_skill'][::-1]})
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Menampilkan tabel data mentah
     with st.expander("Tampilkan Data Tabel"):
-        st.dataframe(df_filtered.sort_values(by='skill_gap_score', ascending=False).reset_index(drop=True), use_container_width=True)
+        st.dataframe(df_filtered.sort_values(by='skill_gap_score', ascending=False).reset_index(drop=True), width="stretch")
 else:
     st.warning("Silakan pilih minimal satu kategori dari sidebar.")
