@@ -1,0 +1,106 @@
+{
+  "programming_languages": [
+    "python",
+    "java",
+    "javascript",
+    "typescript",
+    "c++",
+    "c#",
+    "go",
+    "rust",
+    "ruby",
+    "php",
+    "swift",
+    "kotlin",
+    "scala",
+    "r",
+    "sql",
+    "html",
+    "css"
+  ],
+  "data_engineering": [
+    "apache spark",
+    "pyspark",
+    "hadoop",
+    "kafka",
+    "airflow",
+    "dbt",
+    "etl",
+    "data pipeline",
+    "snowflake",
+    "redshift",
+    "bigquery",
+    "databricks"
+  ],
+  "databases": [
+    "postgresql",
+    "mysql",
+    "mongodb",
+    "redis",
+    "elasticsearch",
+    "dynamodb",
+    "oracle",
+    "sql server"
+  ],
+  "cloud_platforms": [
+    "aws",
+    "amazon web services",
+    "gcp",
+    "google cloud",
+    "azure",
+    "microsoft azure"
+  ],
+  "ml_ai": [
+    "machine learning",
+    "deep learning",
+    "tensorflow",
+    "pytorch",
+    "keras",
+    "scikit-learn",
+    "xgboost",
+    "nlp",
+    "transformers",
+    "bert",
+    "llm",
+    "computer vision"
+  ],
+  "data_analysis": [
+    "pandas",
+    "numpy",
+    "tableau",
+    "power bi",
+    "excel",
+    "statistics",
+    "data visualization"
+  ],
+  "devops_infra": [
+    "docker",
+    "kubernetes",
+    "terraform",
+    "jenkins",
+    "github actions",
+    "ci/cd",
+    "linux"
+  ],
+  "web_development": [
+    "react",
+    "next.js",
+    "vue",
+    "angular",
+    "node.js",
+    "django",
+    "flask",
+    "fastapi",
+    "graphql",
+    "rest api"
+  ],
+  "soft_skills": [
+    "communication",
+    "leadership",
+    "teamwork",
+    "problem solving",
+    "agile",
+    "scrum",
+    "project management"
+  ]
+}
