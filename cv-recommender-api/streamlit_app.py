@@ -27,29 +27,82 @@ st.set_page_config(
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    /* Clean white background and high contrast text */
+    /* Force Light Theme CSS variables on Streamlit root */
+    :root {
+        --text-color: #0f172a !important;
+        --background-color: #ffffff !important;
+        --secondary-background-color: #f8fafc !important;
+        --primary-color: #10b981 !important;
+    }
+
+    /* Force global body and container backgrounds to white */
     html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #ffffff !important;
         color: #0f172a !important;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-family: 'Inter', sans-serif !important;
     }
     
-    /* Clean sidebar styling */
+    /* Clean sidebar styling with light background */
     [data-testid="stSidebar"], [data-testid="stSidebar"] [data-testid="stAppViewContainer"] {
         background-color: #f8fafc !important;
         border-right: 1px solid #e2e8f0 !important;
     }
 
-    /* Custom Card Style for Forms/Information Blocks */
-    .custom-card {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 12px !important;
-        padding: 24px !important;
-        margin-bottom: 25px !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    /* Force all text/labels inside sidebar to be dark */
+    [data-testid="stSidebar"] label, 
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {
+        color: #0f172a !important;
     }
-    
+
+    /* Force all widget labels to be dark slate (high contrast) */
+    label, 
+    [data-testid="stWidgetLabel"], 
+    [data-testid="stWidgetLabel"] p,
+    [data-testid="stWidgetLabel"] span {
+        color: #0f172a !important;
+        font-weight: 600 !important;
+    }
+
+    /* Force all input fields, selectboxes, and textareas to have white backgrounds and dark borders */
+    input, 
+    textarea, 
+    select, 
+    div[data-baseweb="input"], 
+    div[data-baseweb="select"], 
+    div[role="combobox"],
+    div[data-testid="stSelectbox"] {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+    }
+
+    /* Force the text inside inputs, selectboxes, and dropdowns to be dark */
+    input, 
+    textarea, 
+    select, 
+    div[data-baseweb="select"] div, 
+    div[role="combobox"] div,
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] span {
+        color: #0f172a !important;
+    }
+
+    /* Radio button options text color */
+    div[data-testid="stRadio"] label p {
+        color: #0f172a !important;
+    }
+
+    /* Slider value label text color */
+    div[data-testid="stSlider"] span, 
+    div[data-testid="stSlider"] p {
+        color: #0f172a !important;
+    }
+
     /* Executive Metric KPI Card Layout */
     .kpi-card {
         background-color: #ffffff !important;
@@ -115,6 +168,10 @@ st.markdown("""
     
     .rec-item:hover {
         border-color: #cbd5e1 !important;
+    }
+
+    .rec-item h4, .rec-item p, .rec-item div {
+        color: #0f172a !important;
     }
  
     /* Badges */
@@ -320,21 +377,17 @@ if "analysis_result" not in st.session_state:
 # --------------------------------------------------------------------------
 
 # Container for the unified form
-st.markdown("""
-<div class="custom-card">
+# Container for the unified form
+with st.container(border=True):
+    st.markdown("""
     <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; font-family: 'Plus Jakarta Sans', sans-serif;">
         Formulir Evaluasi CV & Kecocokan Kerja
     </h3>
-    <p style="color: #64748b; font-size: 14px; margin: 0 0 24px 0; font-family: Inter;">
+    <p style="color: #64748b; font-size: 14px; margin: 0 0 20px 0; font-family: Inter;">
         Tentukan target profesi Anda, lalu unggah CV atau isi profil kompetensi Anda di bawah ini.
     </p>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-# Outer wrapper for form controls to style cleanly
-form_container = st.container()
-
-with form_container:
     # Row 1: Target Role & Top K
     col_job, col_k = st.columns([3, 2])
     with col_job:
@@ -355,7 +408,7 @@ with form_container:
             help="Tentukan jumlah lowongan kerja terdekat yang ingin ditampilkan."
         )
         
-    st.markdown("<hr style='margin: 20px 0; border-color: #f1f5f9;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin: 20px 0; border-color: #e2e8f0;'>", unsafe_allow_html=True)
     
     # Row 2: Method selection (Radio button group styled nicely)
     input_method = st.radio(
@@ -438,7 +491,7 @@ with form_container:
         
         st.markdown("<br>", unsafe_allow_html=True)
         
-        if st.button("Analisis Profil Terstruktur", type="primary", use_container_width=True, key="btn_struct_main"):
+        if st.button("Mulai Analisis Profil Terstruktur", type="primary", use_container_width=True, key="btn_struct_main"):
             if not selected_skills:
                 st.warning("Mohon pilih minimal satu keahlian utama Anda.")
             else:
