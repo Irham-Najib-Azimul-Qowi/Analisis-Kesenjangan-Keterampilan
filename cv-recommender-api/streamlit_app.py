@@ -18,7 +18,7 @@ import plotly.graph_objects as go
 # ==============================================================================
 st.set_page_config(
     page_title="CV Intelligence & Job Matcher",
-    page_icon="💼",
+    page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -385,7 +385,7 @@ def send_analyze_structured(api_url, skills, experience_years, education, target
 # Title Header Section
 col_header_title, col_header_logo = st.columns([5, 1])
 with col_header_title:
-    st.markdown("<h1 style='margin-bottom: 2px; color: #0f172a; font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 800;'>💼 CV Intelligence & Job Matcher</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='margin-bottom: 2px; color: #0f172a; font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 800;'>CV Intelligence & Job Matcher</h1>", unsafe_allow_html=True)
     st.markdown("<p style='color: #64748b; font-size: 15px; margin-top: 0px; font-weight: 500; font-family: Inter;'>Analisis Kesiapan Skill Terhadap Standar Jabatan & Rekomendasi Lowongan Kerja Semantik Terdekat (FAISS + BERT)</p>", unsafe_allow_html=True)
 with col_header_logo:
     st.markdown("""
@@ -400,7 +400,7 @@ st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px; border-color: #e2
 # --------------------------------------------------------------------------
 # SIDEBAR: CONFIGURATIONS
 # --------------------------------------------------------------------------
-st.sidebar.markdown("<h2 style='margin-top:0px; font-size:22px;'>⚙️ Konfigurasi API</h2>", unsafe_allow_html=True)
+st.sidebar.markdown("<h2 style='margin-top:0px; font-size:22px;'>Konfigurasi API</h2>", unsafe_allow_html=True)
 st.sidebar.markdown("<hr style='margin:10px 0; border-color:#334155;'>", unsafe_allow_html=True)
 
 default_backend = os.getenv("BACKEND_URL", "http://localhost:8080")
@@ -439,7 +439,7 @@ if "analysis_result" not in st.session_state:
 st.markdown("""
 <div class="custom-card">
     <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; font-family: 'Plus Jakarta Sans', sans-serif;">
-        💼 Formulir Evaluasi CV & Kecocokan Kerja
+        Formulir Evaluasi CV & Kecocokan Kerja
     </h3>
     <p style="color: #64748b; font-size: 14px; margin: 0 0 24px 0; font-family: Inter;">
         Tentukan target profesi Anda, lalu unggah CV atau isi profil kompetensi Anda di bawah ini.
@@ -477,9 +477,9 @@ with form_container:
     input_method = st.radio(
         "Pilih Metode Analisis:",
         options=[
-            "📄 Unggah Berkas PDF CV", 
-            "✍️ Tempel Teks CV", 
-            "📋 Isi Profil Kompetensi Terstruktur"
+            "Unggah Berkas PDF CV", 
+            "Tempel Teks CV", 
+            "Isi Profil Kompetensi Terstruktur"
         ],
         horizontal=True,
         key="main_input_method",
@@ -489,7 +489,7 @@ with form_container:
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Conditional Form Fields base on Input Method
-    if input_method == "📄 Unggah Berkas PDF CV":
+    if input_method == "Unggah Berkas PDF CV":
         st.markdown("<p style='font-size:14px; font-weight:600; color:#334155; margin-bottom:6px;'>Dokumen PDF CV:</p>", unsafe_allow_html=True)
         uploaded_file = st.file_uploader(
             "Pilih file PDF CV Anda:", 
@@ -502,7 +502,7 @@ with form_container:
         
         if st.button("Mulai Analisis File PDF", type="primary", use_container_width=True, key="btn_pdf_main"):
             if uploaded_file is not None:
-                with st.spinner("⏳ Mengunggah file PDF dan menjalankan model AI..."):
+                with st.spinner("Mengunggah file PDF dan menjalankan analisis..."):
                     try:
                         file_bytes = uploaded_file.read()
                         res = send_analyze_pdf(
@@ -520,7 +520,7 @@ with form_container:
             else:
                 st.warning("Mohon unggah file PDF CV Anda terlebih dahulu.")
                 
-    elif input_method == "✍️ Tempel Teks CV":
+    elif input_method == "Tempel Teks CV":
         st.markdown("<p style='font-size:14px; font-weight:600; color:#334155; margin-bottom:6px;'>Tulis atau Tempel Isi CV:</p>", unsafe_allow_html=True)
         cv_text_input = st.text_area(
             "Isi Teks CV:",
@@ -534,7 +534,7 @@ with form_container:
         
         if st.button("Mulai Analisis Teks CV", type="primary", use_container_width=True, key="btn_text_main"):
             if len(cv_text_input.strip()) >= 20:
-                with st.spinner("⏳ Memproses teks CV dan menghitung keselarasan skill..."):
+                with st.spinner("Memproses teks CV dan menghitung keselarasan..."):
                     try:
                         res = send_analyze_text(
                             api_host, 
@@ -589,7 +589,7 @@ with form_container:
             if not selected_skills:
                 st.warning("Mohon pilih minimal satu keahlian utama Anda.")
             else:
-                with st.spinner("⏳ Menghitung skor indeks kecocokan profil..."):
+                with st.spinner("Menghitung skor indeks kecocokan..."):
                     try:
                         res = send_analyze_structured(
                             api_host,
@@ -606,12 +606,13 @@ with form_container:
                         st.error(f"Gagal menganalisis profil terstruktur: {e}")
 
 
-# ==================================# 📊 4. RENDER RESULTS SECTION
+# ==================================
+# 4. RENDER RESULTS SECTION
 # ==============================================================================
 if st.session_state.analysis_result is not None:
     res = st.session_state.analysis_result
     st.markdown("<br><hr style='border-color: #e2e8f0;'><br>", unsafe_allow_html=True)
-    st.markdown(f"<h2 style='font-family: \"Plus Jakarta Sans\", sans-serif; color: #0f172a; margin-bottom: 5px; font-weight: 800;'>📊 Hasil Analisis CV: {role_mapping.get(res.get('target_role'), res.get('target_role'))}</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='font-family: \"Plus Jakarta Sans\", sans-serif; color: #0f172a; margin-bottom: 5px; font-weight: 800;'>Hasil Analisis CV: {role_mapping.get(res.get('target_role'), res.get('target_role'))}</h2>", unsafe_allow_html=True)
     st.markdown("<p style='color: #64748b; font-size: 15px; margin-bottom: 20px; font-family: Inter;'>Berikut adalah hasil evaluasi komparatif kecocokan profil Anda terhadap standar pasar industri:</p>", unsafe_allow_html=True)
 
     # KPI High Level Metrics base on design colors:
@@ -619,7 +620,6 @@ if st.session_state.analysis_result is not None:
     
     score = res.get("overall_readiness_score", 0)
     level = res.get("skill_assessment", {}).get("readiness_level", "BELUM DIKETAHUI")
-    emoji = res.get("skill_assessment", {}).get("readiness_emoji", "⚪")
     
     # Class mapping for top color accents
     if score >= 80:
@@ -648,7 +648,7 @@ if st.session_state.analysis_result is not None:
         st.markdown(f"""
         <div class="kpi-card {theme_class}">
             <div class="kpi-title">Kategori Kesiapan</div>
-            <div class="kpi-value" style="font-size: 20px !important; color: {level_color} !important;">{emoji} {level}</div>
+            <div class="kpi-value" style="font-size: 20px !important; color: {level_color} !important;">{level}</div>
             <div class="kpi-desc">Status Daya Saing Profil</div>
         </div>
         """, unsafe_allow_html=True)
@@ -678,7 +678,7 @@ if st.session_state.analysis_result is not None:
 
     with col_details_left:
         # Category Breakdown Chart
-        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; margin-top: 15px; color: #0f172a; font-weight: 700;'>📊 Rincian Kategori Kompetensi</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; margin-top: 15px; color: #0f172a; font-weight: 700;'>Rincian Kategori Kompetensi</h3>", unsafe_allow_html=True)
         
         breakdown = res.get("skill_assessment", {}).get("breakdown", {})
         if breakdown:
@@ -724,7 +724,7 @@ if st.session_state.analysis_result is not None:
             st.plotly_chart(fig_bd, use_container_width=True)
             
         # Met & Gap skills lists
-        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; color: #0f172a; font-weight: 700;'>🔍 Pemetaan Keahlian CV vs Kebutuhan Peran</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; color: #0f172a; font-weight: 700;'>Pemetaan Keahlian CV vs Kebutuhan Peran</h3>", unsafe_allow_html=True)
         
         # Display Met skills
         met_skills = res.get("skill_assessment", {}).get("met", [])
@@ -747,19 +747,19 @@ if st.session_state.analysis_result is not None:
         # Learning Priority Recommendations
         priority_list = res.get("skill_assessment", {}).get("priority_learning", [])
         if priority_list:
-            st.markdown("<br><h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; color: #0f172a; font-weight: 700;'>🚀 Rekomendasi Prioritas Belajar</h3>", unsafe_allow_html=True)
+            st.markdown("<br><h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; color: #0f172a; font-weight: 700;'>Rekomendasi Prioritas Belajar</h3>", unsafe_allow_html=True)
             
             p_data = []
             for item in priority_list:
                 p_data.append({
                     "Skill / Teknologi": item["skill"].title(),
-                    "Prioritas Up-skilling": "🔴 TINGGI (Core Skill)" if item["priority"] == "TINGGI" else "🟡 SEDANG (Expected)"
+                    "Prioritas Up-skilling": "Tinggi (Core Skill)" if item["priority"] == "TINGGI" else "Sedang (Expected)"
                 })
             st.dataframe(pd.DataFrame(p_data), use_container_width=True, hide_index=True)
  
     with col_details_right:
         # Job Recommendations list
-        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; margin-top: 15px; color: #0f172a; font-weight: 700;'>💼 Rekomendasi Lowongan Kerja Relevan</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; margin-top: 15px; color: #0f172a; font-weight: 700;'>Rekomendasi Lowongan Kerja Relevan</h3>", unsafe_allow_html=True)
         st.markdown("<p style='color: #64748b; font-size: 14px; margin-bottom: 15px; font-family: Inter;'>Inference semantik FAISS menampilkan lowongan terdekat yang cocok dengan isi profil/CV Anda:</p>", unsafe_allow_html=True)
         
         recs = res.get("recommended_jobs", [])
@@ -772,7 +772,7 @@ if st.session_state.analysis_result is not None:
                         <h4 style="margin: 0; font-size: 16px; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;">Rank #{job.get('rank', 0)} - {job.get('job_title', 'N/A')}</h4>
                         <span style="font-weight:700; color:#059669; font-size:14px;">Match: {conf:.1f}%</span>
                     </div>
-                    <div style="color:#64748b; font-size:13px; font-weight:600; margin-bottom:4px;">🏭 {job.get('company_name', 'N/A')} | 📍 {job.get('location', 'N/A')}</div>
+                    <div style="color:#64748b; font-size:13px; font-weight:600; margin-bottom:4px;">Perusahaan: {job.get('company_name', 'N/A')} | Lokasi: {job.get('location', 'N/A')}</div>
                     <div style="font-size:12px; color:#475569; font-style:italic; margin-bottom:12px;">"{job.get('reasoning', '')}"</div>
                 """, unsafe_allow_html=True)
                 
@@ -795,5 +795,5 @@ if st.session_state.analysis_result is not None:
             st.info("Tidak ada lowongan kerja rekomendasi yang ditemukan untuk profil ini.")
  
     # Show raw JSON metadata inside expander
-    with st.expander("🛠️ Lihat Metadata Respons API (Raw JSON)"):
+    with st.expander("Lihat Metadata Respons API (Raw JSON)"):
         st.json(res)
