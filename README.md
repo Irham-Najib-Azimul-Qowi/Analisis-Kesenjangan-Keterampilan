@@ -95,6 +95,8 @@ Dataset bersih yang berisi daftar keterampilan dan persyaratan lowongan digunaka
   - Logika Kesenjangan: Menampilkan perbedaan matematis antara keterampilan yang terdeteksi dengan tuntutan dataset pekerjaan.
 
 - **Link Projek:** 
-  - (Silakan tambahkan link repository Github atau deployment Streamlit di sini)
+  - StreamLit : https://skillgapanalysis.streamlit.app/
+  - ETL Pipeline :
+  - Machine Learning :
 
 ---
