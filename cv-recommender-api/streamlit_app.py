@@ -23,162 +23,36 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Injected CSS implementing a premium, high-contrast dashboard UI/UX:
+# Injected CSS implementing a clean layout for custom elements:
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    /* Global Background and Typography */
-    html, body, [data-testid="stAppViewContainer"] {
-        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
-        background-color: #f8fafc !important; /* Elegant off-white background */
-        color: #0f172a !important; /* Deep slate text color */
-    }
-    
-    /* Clean Top Header Bar */
-    [data-testid="stHeader"] {
-        background-color: rgba(248, 250, 252, 0.9) !important;
-        backdrop-filter: blur(12px) !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-    }
-    
-    /* Dark Premium Sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #0f172a !important;
-        border-right: 1px solid #1e293b !important;
-    }
-    
-    [data-testid="stSidebar"] h1, 
-    [data-testid="stSidebar"] h2, 
-    [data-testid="stSidebar"] h3, 
-    [data-testid="stSidebar"] h4, 
-    [data-testid="stSidebar"] h5, 
-    [data-testid="stSidebar"] h6 {
-        color: #f8fafc !important;
-        font-weight: 700 !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-    }
-    
-    [data-testid="stSidebar"] label p {
-        color: #94a3b8 !important; /* Soft blue-gray for labels */
-        font-weight: 600 !important;
-        font-size: 13px !important;
-    }
-    
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] div,
-    [data-testid="stSidebar"] .stMarkdown p {
-        color: #cbd5e1 !important; /* Legible white-gray text */
-    }
-    
-    /* Sidebar Input Styling (Dark theme inputs) */
-    [data-testid="stSidebar"] input, 
-    [data-testid="stSidebar"] select, 
-    [data-testid="stSidebar"] textarea,
-    [data-testid="stSidebar"] div[data-baseweb="input"],
-    [data-testid="stSidebar"] div[data-baseweb="select"] {
-        background-color: #1e293b !important;
-        color: #f8fafc !important;
-        border: 1px solid #334155 !important;
-        border-radius: 12px !important;
-    }
-    
-    [data-testid="stSidebar"] div[data-baseweb="input"]:focus-within {
-        border-color: #10b981 !important; /* Emerald green accent focus */
-    }
-    
-    /* Main body headings */
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-weight: 800 !important;
-        color: #0f172a !important;
-        letter-spacing: -0.5px !important;
-    }
-    
     /* Custom Card Style for Forms/Information Blocks */
     .custom-card {
-        background-color: #ffffff !important;
-        border: 1px solid #f1f5f9 !important;
-        border-radius: 20px !important;
-        padding: 28px !important;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02), 0 8px 10px -6px rgba(0, 0, 0, 0.02) !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(128, 128, 128, 0.2) !important;
+        border-radius: 16px !important;
+        padding: 24px !important;
         margin-bottom: 25px !important;
-    }
-    
-    /* Main Content Input Elements Styling */
-    div.stTextInput input, 
-    div.stSelectbox div[data-baseweb="select"], 
-    div.stNumberInput input, 
-    div.stTextArea textarea,
-    div.stMultiSelect div[data-baseweb="select"] {
-        border-radius: 12px !important;
-        border: 1px solid #cbd5e1 !important;
-        background-color: #ffffff !important;
-        color: #0f172a !important;
-        padding: 10px 14px !important;
-        transition: all 0.2s ease !important;
-    }
-    
-    div.stTextInput input:focus, 
-    div.stSelectbox div[data-baseweb="select"]:focus-within, 
-    div.stNumberInput input:focus, 
-    div.stTextArea textarea:focus {
-        border-color: #10b981 !important; /* Emerald Focus */
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
-    }
-    
-    /* Button pill styling */
-    div.stButton > button {
-        border-radius: 9999px !important; /* Premium Pill style */
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        padding: 0.6rem 2rem !important;
-        transition: all 0.2s ease-in-out !important;
-    }
-    
-    div.stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; /* Emerald to forest green gradient */
-        color: #ffffff !important;
-        border: none !important;
-        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
-    }
-    
-    div.stButton > button[kind="primary"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
-    }
-    
-    div.stButton > button[kind="secondary"] {
-        background-color: #f1f5f9 !important;
-        color: #334155 !important;
-        border: 1px solid #e2e8f0 !important;
-    }
-    
-    div.stButton > button[kind="secondary"]:hover {
-        background-color: #e2e8f0 !important;
-        color: #0f172a !important;
     }
     
     /* Executive Metric KPI Card Layout */
     .kpi-card {
-        background-color: #ffffff !important;
-        border: 1px solid #f1f5f9 !important;
-        border-radius: 20px !important;
-        padding: 24px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01) !important;
+        background-color: rgba(128, 128, 128, 0.05) !important;
+        border: 1px solid rgba(128, 128, 128, 0.2) !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
         transition: all 0.2s ease-in-out !important;
         margin-bottom: 15px !important;
-        border-left: 6px solid #e2e8f0 !important; /* Slate accent default */
+        border-left: 6px solid rgba(128, 128, 128, 0.5) !important;
     }
     
     .kpi-card:hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04) !important;
     }
     
     .kpi-title {
-        color: #64748b !important;
         font-size: 11px !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
@@ -187,15 +61,13 @@ st.markdown("""
     }
     
     .kpi-value {
-        font-size: 32px !important;
+        font-size: 30px !important;
         font-weight: 800 !important;
-        color: #0f172a !important;
         line-height: 1.1 !important;
         margin-bottom: 4px !important;
     }
     
     .kpi-desc {
-        color: #94a3b8 !important;
         font-size: 11px !important;
         font-weight: 500 !important;
     }
@@ -208,31 +80,29 @@ st.markdown("""
     
     /* Recommendation boxes */
     .recommendation-box {
-        background-color: #ffffff !important;
-        border: 1px solid #f1f5f9 !important;
+        background-color: rgba(128, 128, 128, 0.05) !important;
+        border: 1px solid rgba(128, 128, 128, 0.2) !important;
         border-radius: 16px !important;
         padding: 24px !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.01) !important;
         margin-top: 20px !important;
     }
     
     /* Premium List Item styling inside Recommendations */
     .rec-item {
-        background-color: #ffffff !important;
-        border: 1px solid #f1f5f9 !important;
-        border-radius: 18px !important;
-        padding: 22px !important;
+        background-color: rgba(128, 128, 128, 0.03) !important;
+        border: 1px solid rgba(128, 128, 128, 0.15) !important;
+        border-radius: 14px !important;
+        padding: 20px !important;
         margin-bottom: 18px !important;
         transition: all 0.2s ease !important;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01) !important;
     }
     
     .rec-item:hover {
         border-color: #10b981 !important;
         transform: translateY(-2px) !important;
-        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.05) !important;
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.04) !important;
     }
-
+ 
     /* Badges */
     .badge-met {
         display: inline-block !important;
@@ -262,7 +132,7 @@ st.markdown("""
     
     .badge-neutral {
         display: inline-block !important;
-        background-color: #f8fafc !important;
+        background-color: #f1f5f9 !important;
         color: #475569 !important;
         font-size: 12px !important;
         font-weight: 600 !important;
