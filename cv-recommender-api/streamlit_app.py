@@ -132,8 +132,11 @@ DEFAULT_SKILLS = [
 # ==============================================================================
 @st.cache_resource(show_spinner="Sedang memuat AI Models (BERT & FAISS)...")
 def load_pipeline():
+    # Gunakan path absolut ke folder models untuk mencegah error "No such file or directory" saat di Cloud
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    model_dir = os.path.join(base_dir, "models")
     return CVAnalysisPipeline(
-        model_dir=settings.MODEL_DIR,
+        model_dir=model_dir,
         embedding_model_name=settings.EMBEDDING_MODEL,
     )
 
