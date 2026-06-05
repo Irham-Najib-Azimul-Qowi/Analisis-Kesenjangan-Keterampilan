@@ -23,84 +23,98 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Injected CSS implementing a clean layout for custom elements:
+# Injected CSS implementing a clean white layout for custom elements:
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+    /* Clean white background and high contrast text */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+    
+    /* Clean sidebar styling */
+    [data-testid="stSidebar"], [data-testid="stSidebar"] [data-testid="stAppViewContainer"] {
+        background-color: #f8fafc !important;
+        border-right: 1px solid #e2e8f0 !important;
+    }
+
     /* Custom Card Style for Forms/Information Blocks */
     .custom-card {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(128, 128, 128, 0.2) !important;
-        border-radius: 16px !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
         padding: 24px !important;
         margin-bottom: 25px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
     }
     
     /* Executive Metric KPI Card Layout */
     .kpi-card {
-        background-color: rgba(128, 128, 128, 0.05) !important;
-        border: 1px solid rgba(128, 128, 128, 0.2) !important;
-        border-radius: 16px !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
         padding: 20px !important;
-        transition: all 0.2s ease-in-out !important;
         margin-bottom: 15px !important;
-        border-left: 6px solid rgba(128, 128, 128, 0.5) !important;
+        border-left: 5px solid #cbd5e1 !important;
     }
     
     .kpi-card:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
     }
     
     .kpi-title {
         font-size: 11px !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
-        letter-spacing: 1px !important;
+        letter-spacing: 0.5px !important;
+        color: #475569 !important;
         margin-bottom: 8px !important;
     }
     
     .kpi-value {
-        font-size: 30px !important;
+        font-size: 28px !important;
         font-weight: 800 !important;
+        color: #0f172a !important;
         line-height: 1.1 !important;
         margin-bottom: 4px !important;
     }
     
     .kpi-desc {
         font-size: 11px !important;
+        color: #64748b !important;
         font-weight: 500 !important;
     }
     
     /* Accents base on color scheme */
-    .kpi-primary { border-left: 6px solid #10b981 !important; } /* Emerald Green */
-    .kpi-secondary { border-left: 6px solid #6366f1 !important; } /* Indigo */
-    .kpi-tertiary { border-left: 6px solid #f43f5e !important; } /* Rose/Red */
-    .kpi-neutral { border-left: 6px solid #0f172a !important; } /* Dark Charcoal */
+    .kpi-primary { border-left: 5px solid #10b981 !important; } /* Emerald Green */
+    .kpi-secondary { border-left: 5px solid #6366f1 !important; } /* Indigo */
+    .kpi-tertiary { border-left: 5px solid #f43f5e !important; } /* Rose/Red */
+    .kpi-neutral { border-left: 5px solid #0f172a !important; } /* Dark Charcoal */
     
     /* Recommendation boxes */
     .recommendation-box {
-        background-color: rgba(128, 128, 128, 0.05) !important;
-        border: 1px solid rgba(128, 128, 128, 0.2) !important;
-        border-radius: 16px !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
         padding: 24px !important;
         margin-top: 20px !important;
     }
     
     /* Premium List Item styling inside Recommendations */
     .rec-item {
-        background-color: rgba(128, 128, 128, 0.03) !important;
-        border: 1px solid rgba(128, 128, 128, 0.15) !important;
-        border-radius: 14px !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
         padding: 20px !important;
         margin-bottom: 18px !important;
         transition: all 0.2s ease !important;
     }
     
     .rec-item:hover {
-        border-color: #10b981 !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.04) !important;
+        border-color: #cbd5e1 !important;
     }
  
     /* Badges */
@@ -110,10 +124,10 @@ st.markdown("""
         color: #047857 !important; /* Dark green */
         font-size: 12px !important;
         font-weight: 600 !important;
-        padding: 6px 14px !important;
-        border-radius: 9999px !important;
-        margin-right: 8px !important;
-        margin-bottom: 8px !important;
+        padding: 5px 12px !important;
+        border-radius: 6px !important;
+        margin-right: 6px !important;
+        margin-bottom: 6px !important;
         border: 1px solid #a7f3d0 !important;
     }
     
@@ -123,10 +137,10 @@ st.markdown("""
         color: #be123c !important; /* Dark red */
         font-size: 12px !important;
         font-weight: 600 !important;
-        padding: 6px 14px !important;
-        border-radius: 9999px !important;
-        margin-right: 8px !important;
-        margin-bottom: 8px !important;
+        padding: 5px 12px !important;
+        border-radius: 6px !important;
+        margin-right: 6px !important;
+        margin-bottom: 6px !important;
         border: 1px solid #fecdd3 !important;
     }
     
@@ -136,10 +150,10 @@ st.markdown("""
         color: #475569 !important;
         font-size: 12px !important;
         font-weight: 600 !important;
-        padding: 6px 14px !important;
-        border-radius: 9999px !important;
-        margin-right: 8px !important;
-        margin-bottom: 8px !important;
+        padding: 5px 12px !important;
+        border-radius: 6px !important;
+        margin-right: 6px !important;
+        margin-bottom: 6px !important;
         border: 1px solid #e2e8f0 !important;
     }
 </style>
@@ -271,7 +285,7 @@ st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px; border-color: #e2
 # SIDEBAR: CONFIGURATIONS
 # --------------------------------------------------------------------------
 st.sidebar.markdown("<h2 style='margin-top:0px; font-size:22px;'>Konfigurasi API</h2>", unsafe_allow_html=True)
-st.sidebar.markdown("<hr style='margin:10px 0; border-color:#334155;'>", unsafe_allow_html=True)
+st.sidebar.markdown("<hr style='margin:10px 0; border-color:#e2e8f0;'>", unsafe_allow_html=True)
 
 default_backend = os.getenv("BACKEND_URL", "http://localhost:8080")
 api_host = st.sidebar.text_input("Host API Backend:", value=default_backend, help="Tentukan alamat host server FastAPI Anda.")
@@ -284,12 +298,12 @@ if is_connected:
 else:
     st.sidebar.error(f"{conn_msg}")
 
-st.sidebar.markdown("<br><hr style='border-color:#334155;'>", unsafe_allow_html=True)
+st.sidebar.markdown("<br><hr style='border-color:#e2e8f0;'>", unsafe_allow_html=True)
 st.sidebar.markdown("""
-<div style='background-color:#1e293b; border: 1px solid #334155; border-radius:14px; padding:15px; font-size:12px; color:#cbd5e1; line-height: 1.5;'>
-    <h5 style='margin:0 0 6px 0; color:#f8fafc; font-weight:700; font-family: Inter;'>Panduan Menjalankan API:</h5>
-    <code style='color:#10b981; font-size:11px;'>uvicorn app.main:app --port 8080 --reload</code>
-    <p style='margin:8px 0 0 0; color:#cbd5e1;'>Pastikan model binary seperti <code>faiss_job_index.bin</code> telah diunduh dan disimpan di dalam folder <code>models/</code> agar sistem inference berjalan sempurna.</p>
+<div style='background-color:#f8fafc; border: 1px solid #e2e8f0; border-radius:14px; padding:15px; font-size:12px; color:#334155; line-height: 1.5;'>
+    <h5 style='margin:0 0 6px 0; color:#0f172a; font-weight:700; font-family: Inter;'>Panduan Menjalankan API:</h5>
+    <code style='color:#059669; font-size:11px;'>uvicorn app.main:app --port 8080 --reload</code>
+    <p style='margin:8px 0 0 0; color:#475569;'>Pastikan model binary seperti <code>faiss_job_index.bin</code> telah diunduh dan disimpan di dalam folder <code>models/</code> agar sistem inference berjalan sempurna.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -348,7 +362,6 @@ with form_container:
         "Pilih Metode Analisis:",
         options=[
             "Unggah Berkas PDF CV", 
-            "Tempel Teks CV", 
             "Isi Profil Kompetensi Terstruktur"
         ],
         horizontal=True,
@@ -389,36 +402,6 @@ with form_container:
                         st.error(f"Gagal menganalisis PDF: {e}")
             else:
                 st.warning("Mohon unggah file PDF CV Anda terlebih dahulu.")
-                
-    elif input_method == "Tempel Teks CV":
-        st.markdown("<p style='font-size:14px; font-weight:600; color:#334155; margin-bottom:6px;'>Tulis atau Tempel Isi CV:</p>", unsafe_allow_html=True)
-        cv_text_input = st.text_area(
-            "Isi Teks CV:",
-            height=280,
-            placeholder="Tempel isi teks CV Anda di sini...\n\nContoh:\nJohn Doe\nData Scientist dengan 3 tahun pengalaman...\nSkills: Python, SQL, TensorFlow, Machine Learning...",
-            key="text_area_main",
-            label_visibility="collapsed"
-        )
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        if st.button("Mulai Analisis Teks CV", type="primary", use_container_width=True, key="btn_text_main"):
-            if len(cv_text_input.strip()) >= 20:
-                with st.spinner("Memproses teks CV dan menghitung keselarasan..."):
-                    try:
-                        res = send_analyze_text(
-                            api_host, 
-                            cv_text_input, 
-                            selected_role_key, 
-                            top_k_val, 
-                            api_key
-                        )
-                        st.session_state.analysis_result = res
-                        st.success("Analisis teks berhasil diselesaikan!")
-                    except Exception as e:
-                        st.error(f"Gagal menganalisis teks CV: {e}")
-            else:
-                st.warning("Teks CV terlalu pendek. Pastikan teks minimal 20 karakter.")
                 
     else: # Structured Form Input
         st.markdown("<p style='font-size:14px; font-weight:600; color:#334155; margin-bottom:12px;'>Isi Rincian Kompetensi Pelamar:</p>", unsafe_allow_html=True)
