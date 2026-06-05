@@ -402,6 +402,59 @@ https://cv-recommender-api-xxxxx-as.a.run.app
 
 > 🎉 **Simpan URL ini!** Ini adalah endpoint API yang bisa diakses dari mana saja.
 
+### 5.8 Deploy Streamlit Dashboard ke Google Cloud Run (Rekomendasi)
+
+Untuk mendeploy antarmuka dashboard Streamlit secara terpisah di Google Cloud Run:
+
+1. **Build dan Push Image Streamlit ke GCP Artifact Registry**:
+   ```bash
+   # Pastikan Anda berada di root folder: cv-recommender-api/
+   gcloud builds submit \
+       --tag asia-southeast1-docker.pkg.dev/deductive-reach-443812-q3/cv-recommender/dashboard:v1 \
+       --timeout=1800 \
+       --file Dockerfile.streamlit
+   ```
+
+2. **Deploy Container ke Google Cloud Run**:
+   Ganti `https://cv-recommender-api-xxxxx-as.a.run.app` dengan URL asli backend API Anda yang didapatkan dari langkah 5.7:
+   ```bash
+   gcloud run deploy cv-recommender-dashboard \
+       --image asia-southeast1-docker.pkg.dev/deductive-reach-443812-q3/cv-recommender/dashboard:v1 \
+       --region asia-southeast1 \
+       --platform managed \
+       --memory 1Gi \
+       --cpu 1 \
+       --min-instances 0 \
+       --max-instances 2 \
+       --port 8501 \
+       --allow-unauthenticated \
+       --set-env-vars "BACKEND_URL=https://cv-recommender-api-xxxxx-as.a.run.app"
+   ```
+
+3. **Dapatkan URL Dashboard**:
+   ```bash
+   gcloud run services describe cv-recommender-dashboard \
+       --region asia-southeast1 \
+       --format "value(status.url)"
+   ```
+   Buka URL output di web browser Anda untuk menggunakan dashboard.
+
+### 5.9 Deploy Streamlit ke Streamlit Community Cloud (Gratis & Cepat)
+
+Karena repositori Git Anda sudah di-push ke GitHub, Anda juga dapat menggunakan layanan hosting gratis dari Streamlit:
+
+1. Buka [share.streamlit.io](https://share.streamlit.io) dan masuk (*Sign In*) menggunakan akun GitHub Anda.
+2. Klik tombol **New App**.
+3. Isi parameter deployment:
+   * **Repository**: `Irham-Najib-Azimul-Qowi/Analisis-Kesenjangan-Keterampilan`
+   * **Branch**: `main`
+   * **Main file path**: `cv-recommender-api/streamlit_app.py` *(karena folder berada di subdirektori)*
+4. Klik **Advanced settings...** di bagian bawah form, pilih tab **Secrets** atau **Environment Variables**, dan tambahkan URL Backend API Anda:
+   ```toml
+   BACKEND_URL = "https://cv-recommender-api-xxxxx-as.a.run.app"
+   ```
+5. Klik **Deploy!** Aplikasi Anda akan aktif dalam beberapa menit.
+
 ---
 
 ## 6. Test Endpoint Setelah Deploy
