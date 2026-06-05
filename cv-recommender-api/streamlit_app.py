@@ -23,195 +23,89 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Injected CSS implementing a clean white layout for custom elements:
+# Custom CSS untuk tampilan modern (meniru Gap Analysis)
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    /* Force Light Theme CSS variables on Streamlit root */
-    :root {
-        --text-color: #0f172a !important;
-        --background-color: #ffffff !important;
-        --secondary-background-color: #f8fafc !important;
-        --primary-color: #10b981 !important;
-    }
-
-    /* Force global body and container backgrounds to white */
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
-        background-color: #ffffff !important;
-        color: #0f172a !important;
-        font-family: 'Inter', sans-serif !important;
-    }
-    
-    /* Clean sidebar styling with light background */
-    [data-testid="stSidebar"], [data-testid="stSidebar"] [data-testid="stAppViewContainer"] {
-        background-color: #f8fafc !important;
-        border-right: 1px solid #e2e8f0 !important;
-    }
-
-    /* Force all text/labels inside sidebar to be dark */
-    [data-testid="stSidebar"] label, 
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {
-        color: #0f172a !important;
-    }
-
-    /* Force all widget labels to be dark slate (high contrast) */
-    label, 
-    [data-testid="stWidgetLabel"], 
-    [data-testid="stWidgetLabel"] p,
-    [data-testid="stWidgetLabel"] span {
-        color: #0f172a !important;
-        font-weight: 600 !important;
-    }
-
-    /* Force all input fields, selectboxes, and textareas to have white backgrounds and dark borders */
-    input, 
-    textarea, 
-    select, 
-    div[data-baseweb="input"], 
-    div[data-baseweb="select"], 
-    div[role="combobox"],
-    div[data-testid="stSelectbox"] {
-        background-color: #ffffff !important;
-        color: #0f172a !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 8px !important;
-    }
-
-    /* Force the text inside inputs, selectboxes, and dropdowns to be dark */
-    input, 
-    textarea, 
-    select, 
-    div[data-baseweb="select"] div, 
-    div[role="combobox"] div,
-    [data-testid="stMarkdownContainer"] p,
-    [data-testid="stMarkdownContainer"] span {
-        color: #0f172a !important;
-    }
-
-    /* Radio button options text color */
-    div[data-testid="stRadio"] label p {
-        color: #0f172a !important;
-    }
-
-    /* Slider value label text color */
-    div[data-testid="stSlider"] span, 
-    div[data-testid="stSlider"] p {
-        color: #0f172a !important;
-    }
-
-    /* Executive Metric KPI Card Layout */
+    /* Metric/KPI Card Layout */
     .kpi-card {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 12px !important;
-        padding: 20px !important;
-        margin-bottom: 15px !important;
-        border-left: 5px solid #cbd5e1 !important;
-    }
-    
-    .kpi-card:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        text-align: center;
+        margin-bottom: 15px;
     }
     
     .kpi-title {
-        font-size: 11px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        color: #475569 !important;
-        margin-bottom: 8px !important;
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 10px;
     }
     
     .kpi-value {
-        font-size: 28px !important;
-        font-weight: 800 !important;
-        color: #0f172a !important;
-        line-height: 1.1 !important;
-        margin-bottom: 4px !important;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #1f77b4;
     }
     
     .kpi-desc {
-        font-size: 11px !important;
-        color: #64748b !important;
-        font-weight: 500 !important;
+        font-size: 0.85rem;
+        color: #666;
     }
-    
-    /* Accents base on color scheme */
-    .kpi-primary { border-left: 5px solid #10b981 !important; } /* Emerald Green */
-    .kpi-secondary { border-left: 5px solid #6366f1 !important; } /* Indigo */
-    .kpi-tertiary { border-left: 5px solid #f43f5e !important; } /* Rose/Red */
-    .kpi-neutral { border-left: 5px solid #0f172a !important; } /* Dark Charcoal */
     
     /* Recommendation boxes */
     .recommendation-box {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 12px !important;
-        padding: 24px !important;
-        margin-top: 20px !important;
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-top: 20px;
     }
     
     /* Premium List Item styling inside Recommendations */
     .rec-item {
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 12px !important;
-        padding: 20px !important;
-        margin-bottom: 18px !important;
-        transition: all 0.2s ease !important;
-    }
-    
-    .rec-item:hover {
-        border-color: #cbd5e1 !important;
-    }
-
-    .rec-item h4, .rec-item p, .rec-item div {
-        color: #0f172a !important;
+        background-color: #f8f9fa;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
     }
  
     /* Badges */
     .badge-met {
-        display: inline-block !important;
-        background-color: #ecfdf5 !important; /* Soft green */
-        color: #047857 !important; /* Dark green */
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        padding: 5px 12px !important;
-        border-radius: 6px !important;
-        margin-right: 6px !important;
-        margin-bottom: 6px !important;
-        border: 1px solid #a7f3d0 !important;
+        display: inline-block;
+        background-color: #d4edda;
+        color: #155724;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
     }
     
     .badge-gap {
-        display: inline-block !important;
-        background-color: #fff1f2 !important; /* Soft red */
-        color: #be123c !important; /* Dark red */
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        padding: 5px 12px !important;
-        border-radius: 6px !important;
-        margin-right: 6px !important;
-        margin-bottom: 6px !important;
-        border: 1px solid #fecdd3 !important;
+        display: inline-block;
+        background-color: #f8d7da;
+        color: #721c24;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
     }
     
     .badge-neutral {
-        display: inline-block !important;
-        background-color: #f1f5f9 !important;
-        color: #475569 !important;
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        padding: 5px 12px !important;
-        border-radius: 6px !important;
-        margin-right: 6px !important;
-        margin-bottom: 6px !important;
-        border: 1px solid #e2e8f0 !important;
+        display: inline-block;
+        background-color: #e2e3e5;
+        color: #383d41;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -323,26 +217,16 @@ def send_analyze_structured(api_url, skills, experience_years, education, target
 # 🖥️ 3. STREAMLIT USER INTERFACE
 # ==============================================================================
 
-# Title Header Section
-col_header_title, col_header_logo = st.columns([5, 1])
-with col_header_title:
-    st.markdown("<h1 style='margin-bottom: 2px; color: #0f172a; font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 800;'>CV Intelligence & Job Matcher</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #64748b; font-size: 15px; margin-top: 0px; font-weight: 500; font-family: Inter;'>Analisis Kesiapan Skill Terhadap Standar Jabatan & Rekomendasi Lowongan Kerja Semantik Terdekat (FAISS + BERT)</p>", unsafe_allow_html=True)
-with col_header_logo:
-    st.markdown("""
-    <div style='background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 10px; text-align: center;'>
-        <span style='color: #059669; font-weight: 800; font-size: 14px; display: block; font-family: "Plus Jakarta Sans";'>FAISS</span>
-        <span style='color: #0f172a; font-weight: 600; font-size: 10px; display: block; font-family: "Plus Jakarta Sans";'>SEMATCH</span>
-    </div>
-    """, unsafe_allow_html=True)
+# ================= HEADER =================
+st.title("📄 CV Intelligence & Job Matcher")
+st.markdown("""
+Dashboard ini dirancang untuk melakukan **Analisis Kesiapan Skill** Terhadap Standar Jabatan & memberikan **Rekomendasi Lowongan Kerja** Semantik Terdekat berbasis model FAISS + BERT.
+""")
+st.divider()
 
-st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px; border-color: #e2e8f0;'>", unsafe_allow_html=True)
-
-# --------------------------------------------------------------------------
-# SIDEBAR: CONFIGURATIONS
-# --------------------------------------------------------------------------
-st.sidebar.markdown("<h2 style='margin-top:0px; font-size:22px;'>Konfigurasi API</h2>", unsafe_allow_html=True)
-st.sidebar.markdown("<hr style='margin:10px 0; border-color:#e2e8f0;'>", unsafe_allow_html=True)
+# ================= SIDEBAR =================
+st.sidebar.title("⚙️ Konfigurasi API")
+st.sidebar.markdown("Atur konfigurasi API server Anda di bawah ini.")
 
 default_backend = os.getenv("BACKEND_URL", "http://localhost:8080")
 api_host = st.sidebar.text_input("Host API Backend:", value=default_backend, help="Tentukan alamat host server FastAPI Anda.")
@@ -355,14 +239,12 @@ if is_connected:
 else:
     st.sidebar.error(f"{conn_msg}")
 
-st.sidebar.markdown("<br><hr style='border-color:#e2e8f0;'>", unsafe_allow_html=True)
-st.sidebar.markdown("""
-<div style='background-color:#f8fafc; border: 1px solid #e2e8f0; border-radius:14px; padding:15px; font-size:12px; color:#334155; line-height: 1.5;'>
-    <h5 style='margin:0 0 6px 0; color:#0f172a; font-weight:700; font-family: Inter;'>Panduan Menjalankan API:</h5>
-    <code style='color:#059669; font-size:11px;'>uvicorn app.main:app --port 8080 --reload</code>
-    <p style='margin:8px 0 0 0; color:#475569;'>Pastikan model binary seperti <code>faiss_job_index.bin</code> telah diunduh dan disimpan di dalam folder <code>models/</code> agar sistem inference berjalan sempurna.</p>
-</div>
-""", unsafe_allow_html=True)
+st.sidebar.divider()
+st.sidebar.info("""
+**Panduan Menjalankan API:**\n
+`uvicorn app.main:app --port 8080 --reload`\n
+Pastikan model binary seperti `faiss_job_index.bin` telah diunduh di dalam folder `models/`.
+""")
 
 # Fetch roles dynamically
 roles_options = fetch_api_roles(api_host)
@@ -379,14 +261,8 @@ if "analysis_result" not in st.session_state:
 # Container for the unified form
 # Container for the unified form
 with st.container(border=True):
-    st.markdown("""
-    <h3 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; font-family: 'Plus Jakarta Sans', sans-serif;">
-        Formulir Evaluasi CV & Kecocokan Kerja
-    </h3>
-    <p style="color: #64748b; font-size: 14px; margin: 0 0 20px 0; font-family: Inter;">
-        Tentukan target profesi Anda, lalu unggah CV atau isi profil kompetensi Anda di bawah ini.
-    </p>
-    """, unsafe_allow_html=True)
+    st.subheader("📋 Formulir Evaluasi CV & Kecocokan Kerja")
+    st.write("Tentukan target profesi Anda, lalu unggah CV atau isi profil kompetensi Anda di bawah ini.")
 
     # Row 1: Target Role & Top K
     col_job, col_k = st.columns([3, 2])
@@ -426,7 +302,7 @@ with st.container(border=True):
     
     # Conditional Form Fields base on Input Method
     if input_method == "Unggah Berkas PDF CV":
-        st.markdown("<p style='font-size:14px; font-weight:600; color:#334155; margin-bottom:6px;'>Dokumen PDF CV:</p>", unsafe_allow_html=True)
+        st.markdown("**Dokumen PDF CV:**")
         uploaded_file = st.file_uploader(
             "Pilih file PDF CV Anda:", 
             type=["pdf"], 
@@ -457,7 +333,7 @@ with st.container(border=True):
                 st.warning("Mohon unggah file PDF CV Anda terlebih dahulu.")
                 
     else: # Structured Form Input
-        st.markdown("<p style='font-size:14px; font-weight:600; color:#334155; margin-bottom:12px;'>Isi Rincian Kompetensi Pelamar:</p>", unsafe_allow_html=True)
+        st.markdown("**Isi Rincian Kompetensi Pelamar:**")
         
         col_f1, col_f2 = st.columns(2)
         with col_f1:
@@ -517,9 +393,9 @@ with st.container(border=True):
 # ==============================================================================
 if st.session_state.analysis_result is not None:
     res = st.session_state.analysis_result
-    st.markdown("<br><hr style='border-color: #e2e8f0;'><br>", unsafe_allow_html=True)
-    st.markdown(f"<h2 style='font-family: \"Plus Jakarta Sans\", sans-serif; color: #0f172a; margin-bottom: 5px; font-weight: 800;'>Hasil Analisis CV: {role_mapping.get(res.get('target_role'), res.get('target_role'))}</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #64748b; font-size: 15px; margin-bottom: 20px; font-family: Inter;'>Berikut adalah hasil evaluasi komparatif kecocokan profil Anda terhadap standar pasar industri:</p>", unsafe_allow_html=True)
+    st.divider()
+    st.header(f"Hasil Analisis CV: {role_mapping.get(res.get('target_role'), res.get('target_role'))}")
+    st.write("Berikut adalah hasil evaluasi komparatif kecocokan profil Anda terhadap standar pasar industri:")
 
     # KPI High Level Metrics base on design colors:
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
@@ -554,7 +430,7 @@ if st.session_state.analysis_result is not None:
         st.markdown(f"""
         <div class="kpi-card {theme_class}">
             <div class="kpi-title">Kategori Kesiapan</div>
-            <div class="kpi-value" style="font-size: 20px !important; color: {level_color} !important;">{level}</div>
+            <div class="kpi-value" style="font-size: 1.5rem; color: {level_color};">{level}</div>
             <div class="kpi-desc">Status Daya Saing Profil</div>
         </div>
         """, unsafe_allow_html=True)
@@ -564,7 +440,7 @@ if st.session_state.analysis_result is not None:
         st.markdown(f"""
         <div class="kpi-card kpi-primary">
             <div class="kpi-title">Skill Terpenuhi</div>
-            <div class="kpi-value" style="color: #059669 !important;">{total_matched} Skill</div>
+            <div class="kpi-value" style="color: #10b981;">{total_matched} Skill</div>
             <div class="kpi-desc">Telah Terdeteksi di CV</div>
         </div>
         """, unsafe_allow_html=True)
@@ -574,7 +450,7 @@ if st.session_state.analysis_result is not None:
         st.markdown(f"""
         <div class="kpi-card kpi-tertiary">
             <div class="kpi-title">Kesenjangan Skill (Gap)</div>
-            <div class="kpi-value" style="color: #be123c !important;">{total_gap} Skill</div>
+            <div class="kpi-value" style="color: #f43f5e;">{total_gap} Skill</div>
             <div class="kpi-desc">Kelemahan Profil untuk Diperbaiki</div>
         </div>
         """, unsafe_allow_html=True)
@@ -584,7 +460,7 @@ if st.session_state.analysis_result is not None:
 
     with col_details_left:
         # Category Breakdown Chart
-        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; margin-top: 15px; color: #0f172a; font-weight: 700;'>Rincian Kategori Kompetensi</h3>", unsafe_allow_html=True)
+        st.subheader("Rincian Kategori Kompetensi")
         
         breakdown = res.get("skill_assessment", {}).get("breakdown", {})
         if breakdown:
@@ -630,30 +506,30 @@ if st.session_state.analysis_result is not None:
             st.plotly_chart(fig_bd, use_container_width=True)
             
         # Met & Gap skills lists
-        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; color: #0f172a; font-weight: 700;'>Pemetaan Keahlian CV vs Kebutuhan Peran</h3>", unsafe_allow_html=True)
+        st.subheader("Pemetaan Keahlian CV vs Kebutuhan Peran")
         
         # Display Met skills
         met_skills = res.get("skill_assessment", {}).get("met", [])
         if met_skills:
-            st.markdown("<p style='font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 5px;'>Keahlian yang Anda miliki (Met):</p>", unsafe_allow_html=True)
+            st.markdown("**Keahlian yang Anda miliki (Met):**")
             badges_html = "".join([f"<span class='badge-met'>{s}</span>" for s in met_skills])
             st.markdown(f"<div>{badges_html}</div>", unsafe_allow_html=True)
         else:
-            st.markdown("<p style='color:#64748B; font-size: 13px;'>Tidak ada keahlian terdaftar yang sesuai.</p>", unsafe_allow_html=True)
+            st.caption("Tidak ada keahlian terdaftar yang sesuai.")
             
         # Display Gap skills
         gap_skills = res.get("skill_assessment", {}).get("gap", [])
         if gap_skills:
-            st.markdown("<br><p style='font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 5px;'>Keahlian yang perlu dipelajari (Gap):</p>", unsafe_allow_html=True)
+            st.markdown("**Keahlian yang perlu dipelajari (Gap):**")
             badges_html = "".join([f"<span class='badge-gap'>{s}</span>" for s in gap_skills])
-            st.markdown(f"<div>{badges_html}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div>{badges_html}</div><br>", unsafe_allow_html=True)
         else:
-            st.markdown("<br><p style='color:#64748B; font-size: 13px;'>Hebat! Anda tidak memiliki kesenjangan skill dengan peran ini.</p>", unsafe_allow_html=True)
+            st.caption("Hebat! Anda tidak memiliki kesenjangan skill dengan peran ini.")
  
         # Learning Priority Recommendations
         priority_list = res.get("skill_assessment", {}).get("priority_learning", [])
         if priority_list:
-            st.markdown("<br><h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; color: #0f172a; font-weight: 700;'>Rekomendasi Prioritas Belajar</h3>", unsafe_allow_html=True)
+            st.subheader("Rekomendasi Prioritas Belajar")
             
             p_data = []
             for item in priority_list:
@@ -665,8 +541,8 @@ if st.session_state.analysis_result is not None:
  
     with col_details_right:
         # Job Recommendations list
-        st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 18px; margin-top: 15px; color: #0f172a; font-weight: 700;'>Rekomendasi Lowongan Kerja Relevan</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color: #64748b; font-size: 14px; margin-bottom: 15px; font-family: Inter;'>Inference semantik FAISS menampilkan lowongan terdekat yang cocok dengan isi profil/CV Anda:</p>", unsafe_allow_html=True)
+        st.subheader("Rekomendasi Lowongan Kerja Relevan")
+        st.write("Inference semantik FAISS menampilkan lowongan terdekat yang cocok dengan isi profil/CV Anda:")
         
         recs = res.get("recommended_jobs", [])
         if recs:
@@ -675,11 +551,11 @@ if st.session_state.analysis_result is not None:
                 st.markdown(f"""
                 <div class="rec-item">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h4 style="margin: 0; font-size: 16px; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;">Rank #{job.get('rank', 0)} - {job.get('job_title', 'N/A')}</h4>
-                        <span style="font-weight:700; color:#059669; font-size:14px;">Match: {conf:.1f}%</span>
+                        <h4 style="margin: 0; font-size: 16px; color: #212529; font-weight: bold;">Rank #{job.get('rank', 0)} - {job.get('job_title', 'N/A')}</h4>
+                        <span style="font-weight:bold; color:#198754; font-size:14px;">Match: {conf:.1f}%</span>
                     </div>
-                    <div style="color:#64748b; font-size:13px; font-weight:600; margin-bottom:4px;">Perusahaan: {job.get('company_name', 'N/A')} | Lokasi: {job.get('location', 'N/A')}</div>
-                    <div style="font-size:12px; color:#475569; font-style:italic; margin-bottom:12px;">"{job.get('reasoning', '')}"</div>
+                    <div style="color:#495057; font-size:13px; font-weight:600; margin-bottom:4px;">Perusahaan: {job.get('company_name', 'N/A')} | Lokasi: {job.get('location', 'N/A')}</div>
+                    <div style="font-size:12px; color:#6c757d; font-style:italic; margin-bottom:12px;">"{job.get('reasoning', '')}"</div>
                 """, unsafe_allow_html=True)
                 
                 # Match & Missing skills inside the job card
@@ -687,12 +563,12 @@ if st.session_state.analysis_result is not None:
                 job_gap = job.get("missing_skills", [])
                 
                 if job_met:
-                    st.markdown("<span style='font-size:11px; font-weight:700; color:#059669; display:block; margin-bottom:3px;'>Skill Cocok:</span>", unsafe_allow_html=True)
+                    st.markdown("<span style='font-size:11px; font-weight:bold; color:#198754; display:block; margin-bottom:3px;'>Skill Cocok:</span>", unsafe_allow_html=True)
                     met_badges = "".join([f"<span class='badge-met' style='padding:2px 6px !important; font-size:10px !important;'>{s}</span>" for s in job_met])
                     st.markdown(f"<div style='margin-bottom:8px;'>{met_badges}</div>", unsafe_allow_html=True)
                     
                 if job_gap:
-                    st.markdown("<span style='font-size:11px; font-weight:700; color:#f43f5e; display:block; margin-bottom:3px;'>Skill Perlu Ditingkatkan:</span>", unsafe_allow_html=True)
+                    st.markdown("<span style='font-size:11px; font-weight:bold; color:#dc3545; display:block; margin-bottom:3px;'>Skill Perlu Ditingkatkan:</span>", unsafe_allow_html=True)
                     gap_badges = "".join([f"<span class='badge-gap' style='padding:2px 6px !important; font-size:10px !important;'>{s}</span>" for s in job_gap])
                     st.markdown(f"<div>{gap_badges}</div>", unsafe_allow_html=True)
                     
