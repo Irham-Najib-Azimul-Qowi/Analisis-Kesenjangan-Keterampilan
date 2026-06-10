@@ -10,6 +10,11 @@ Panduan ini berisi petunjuk lengkap dari dasar untuk menyiapkan, menjalankan, da
 
 Diagram di bawah ini menggambarkan bagaimana komponen frontend (Streamlit) dan backend (FastAPI/Pipeline) berinteraksi dalam lingkungan production:
 
+![Diagram Arsitektur Deployment](deployment_diagram.png)
+
+<details>
+<summary><b>Klik di sini untuk melihat Kode Sumber Mermaid (jika ingin diedit kembali)</b></summary>
+
 ```mermaid
 graph LR
     classDef clientStyle fill:#e6f7ff,stroke:#1890ff,stroke-width:2px;
@@ -25,6 +30,8 @@ graph LR
     class StreamlitCloud,BackendAPI,PipelineML cloudStyle;
     class ModelsFolder storageStyle;
 ```
+
+</details>
 
 ---
 

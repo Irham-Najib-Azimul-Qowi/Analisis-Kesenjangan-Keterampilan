@@ -10,6 +10,11 @@ Buku panduan ini dirancang untuk menjelaskan seluruh alur pengembangan, dari eks
 
 Diagram di bawah ini menggambarkan bagaimana data CV pelamar kerja diproses secara bertahap oleh kecerdasan buatan (BERT & FAISS) hingga menghasilkan kecocokan lowongan kerja dan rekomendasi kesiapan keahlian di layar dashboard.
 
+![Diagram Arsitektur Sistem](architecture_diagram.png)
+
+<details>
+<summary><b>Klik di sini untuk melihat Kode Sumber Mermaid (jika ingin diedit kembali)</b></summary>
+
 ```mermaid
 graph TD
     classDef inputStyle fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,rx:10px,ry:10px;
@@ -68,6 +73,8 @@ graph TD
     class C1,C2,C3,C4,C5 databaseStyle;
     class D1,D2,D3,D4 outputStyle;
 ```
+
+</details>
 
 ### Penjelasan Detail Alur Data:
 1. **Langkah 1 (Input):** Pelamar kerja memasukkan profil mereka melalui dua opsi: mengunggah berkas **PDF CV** asli, atau mengisi **formulir teks** terstruktur (Tahun Pengalaman, Pendidikan, Keahlian Pilihan).

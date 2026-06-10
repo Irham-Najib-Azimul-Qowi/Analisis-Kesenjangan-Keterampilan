@@ -10,6 +10,11 @@ Panduan ini berisi penjelasan lengkap dan terstruktur mengenai alur pemrosesan d
 
 Diagram di bawah ini menggambarkan perjalanan data dari file mentah di lokal dan broker cloud (Aiven Kafka) hingga menjadi dataset kesenjangan siap saji di dashboard:
 
+![Diagram Alur Analisis Gap](gap_analysis_flow.png)
+
+<details>
+<summary><b>Klik di sini untuk melihat Kode Sumber Mermaid (jika ingin diedit kembali)</b></summary>
+
 ```mermaid
 graph TD
     classDef sourceStyle fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,rx:10px,ry:10px;
@@ -63,6 +68,8 @@ graph TD
     class C1,C2,C3 calcStyle;
     class D1,D2,D3 viewStyle;
 ```
+
+</details>
 
 ### Penjelasan Rinci Alur Kerja ETL:
 1. **Fase 1 (Sumber Data):** Kita memiliki data industri berupa berkas CSV berisi ribuan iklan lowongan kerja (`adzuna_jobs.csv`) dan data akademik berupa berkas Excel standar keahlian O*NET (`Technology Skills.xlsx`). Selain itu, ada antrean pesan dinamis di broker cloud Aiven Kafka.

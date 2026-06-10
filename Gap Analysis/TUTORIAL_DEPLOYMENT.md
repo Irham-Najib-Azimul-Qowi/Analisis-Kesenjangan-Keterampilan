@@ -10,6 +10,11 @@ Panduan ini berisi petunjuk lengkap langkah demi langkah dari awal untuk memasan
 
 Diagram di bawah ini menggambarkan alur kerja yang harus diikuti untuk menjalankan dashboard Gap Analysis dari awal:
 
+![Diagram Alur Pemasangan & Deployment](deployment_flow.png)
+
+<details>
+<summary><b>Klik di sini untuk melihat Kode Sumber Mermaid (jika ingin diedit kembali)</b></summary>
+
 ```mermaid
 graph TD
     classDef setupStyle fill:#fff3e0,stroke:#f57c00,stroke-width:2px,rx:5px,ry:5px;
@@ -27,6 +32,8 @@ graph TD
     class Step4,Step5,Step6 testStyle;
     class Step7 cloudStyle;
 ```
+
+</details>
 
 ---
 
