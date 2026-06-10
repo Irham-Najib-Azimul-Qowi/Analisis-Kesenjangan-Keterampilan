@@ -2,8 +2,11 @@
 
 ## Panduan Lengkap: Menjalankan Lokal & Deploy Streamlit Dashboard
 
-Semua artefak model ML sudah tersedia di folder `models/` (dikelola oleh Git LFS).
+Semua artefak model ML sudah tersedia di folder `models/` (diunduh menggunakan Git LFS).
+*Catatan: Git LFS (Large File Storage) adalah sistem Git untuk mengunduh file besar dari GitHub ke komputer Anda, bukan nama folder fisik.*
 **Tidak perlu Google Cloud** — cukup clone repo ini dan jalankan.
+
+
 
 ---
 
@@ -22,7 +25,7 @@ Semua artefak model ML sudah tersedia di folder `models/` (dikelola oleh Git LFS
 ## 1. Struktur Folder
 
 ```
-cv-recommender-api/
+CV Recommender/
 ├── app/
 │   ├── __init__.py              # Package init
 │   ├── main.py                  # FastAPI entry point + monitoring + security
@@ -57,11 +60,18 @@ cv-recommender-api/
 
 ```bash
 git clone https://github.com/Irham-Najib-Azimul-Qowi/Analisis-Kesenjangan-Keterampilan.git
-cd Analisis-Kesenjangan-Keterampilan/cv-recommender-api
+cd "Analisis-Kesenjangan-Keterampilan/CV Recommender"
 ```
 
-> **Catatan:** Pastikan Git LFS sudah terinstal agar file model besar terdownload.
-> Jika belum: `git lfs install && git lfs pull`
+> **💡 Catatan Penting tentang Git LFS:** 
+> **Git LFS (Large File Storage)** bukanlah nama folder fisik di dalam proyek. Ini adalah sistem Git untuk mengelola berkas berukuran besar. 
+> Berkas besar tersebut (seperti `faiss_job_index.bin` ~160MB dan `job_metadata.csv` ~15MB) disimpan di dalam folder **`models/`**.
+> Jika Anda mendapati berkas di dalam folder `models/` hanya berukuran beberapa KB (berisi teks hash), silakan unduh berkas aslinya dengan menjalankan perintah berikut di terminal:
+> ```bash
+> git lfs install
+> git lfs pull
+> ```
+
 
 ### 2.2 Buat Virtual Environment
 
@@ -148,7 +158,7 @@ curl -s -X POST http://localhost:8080/analyze/text \
 ### 3.2 Jalankan Backend + Frontend
 
 ```bash
-cd cv-recommender-api
+cd "CV Recommender"
 
 docker compose up --build
 ```
@@ -188,7 +198,7 @@ Streamlit Community Cloud adalah layanan hosting **gratis** untuk men-deploy apl
 |-------|-------|
 | **Repository** | `Irham-Najib-Azimul-Qowi/Analisis-Kesenjangan-Keterampilan` |
 | **Branch** | `main` |
-| **Main file path** | `cv-recommender-api/streamlit_app.py` |
+| **Main file path** | `CV Recommender/streamlit_app.py` |
 
 #### Langkah 3: Konfigurasi Secrets
 
@@ -213,7 +223,7 @@ Klik **Deploy!** — aplikasi akan aktif dalam beberapa menit di URL seperti `ht
 1. Buka [railway.app](https://railway.app), login dengan GitHub
 2. **New Project** → **Deploy from GitHub Repo**
 3. Pilih repo `Analisis-Kesenjangan-Keterampilan`
-4. Set root directory ke `cv-recommender-api`
+4. Set root directory ke `CV Recommender`
 5. Set environment: `PORT=8080`
 6. Dapatkan URL publik dari Railway dashboard
 
@@ -221,7 +231,7 @@ Klik **Deploy!** — aplikasi akan aktif dalam beberapa menit di URL seperti `ht
 
 1. Buka [render.com](https://render.com), login
 2. **New** → **Web Service** → Connect repo
-3. Root Directory: `cv-recommender-api`
+3. Root Directory: `CV Recommender`
 4. Start Command: `gunicorn app.main:app -w 1 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 120`
 
 #### Opsi C: Ngrok (Development/Demo saja)

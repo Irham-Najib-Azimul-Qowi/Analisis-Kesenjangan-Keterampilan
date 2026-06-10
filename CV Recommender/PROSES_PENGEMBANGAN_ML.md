@@ -48,7 +48,7 @@ graph TD
         D1["Kartu Nilai Kesiapan Kerja (Persen %)"]
         D2["Daftar Lowongan Pekerjaan yang Paling Cocok"]
         D3["Daftar Prioritas Keahlian yang Perlu Dipelajari (GAP)"]
-        D4["Visualisasi Grafik Interaktif (Plotly)"]
+        D4["Visualisasi Progress Bar (Streamlit Native)"]
     end
 
     %% Hubungan
@@ -141,8 +141,8 @@ Ketika model AI dipindahkan dari notebook ke aplikasi dashboard **Streamlit**, k
    * **Analogi:** Seperti guru yang menyalin peta dunia di papan tulis satu kali saja di pagi hari, alih-alih menggambar ulang dari awal setiap kali murid baru masuk kelas.
 2. **Membaca File PDF (`pdfplumber`):**
    * Library `pdfplumber` bertugas membaca berkas PDF CV yang diunggah pengguna, memilah teks halaman demi halaman, lalu menyatukannya menjadi satu paragraf teks panjang untuk dianalisis oleh mesin AI.
-3. **Pembuatan Grafik Menggunakan Plotly:**
-   * Untuk menampilkan hasil penilaian secara interaktif, kami menggunakan **Plotly Express**. Grafik ini memungkinkan pengguna mengarahkan kursor ke atas grafik batang untuk melihat nilai detail skor keahlian mereka secara real-time.
+3. **Visualisasi Menggunakan Progress Bar Native:**
+   * Untuk menyederhanakan kode dashboard agar lebih mudah dibaca, cepat dimuat, dan ringan, kami mengganti grafik Plotly yang berat dengan komponen progress bar bawaan Streamlit (`st.progress`). Visualisasi ini menampilkan persentase kesiapan per kategori skill secara minimalis namun tetap premium dan profesional.
 
 ---
 

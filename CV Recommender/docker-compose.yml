@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: cv-recommender-api-backend
+    container_name: cv-recommender-backend
     ports:
       - "8080:8080"
     volumes:
@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.streamlit
-    container_name: cv-recommender-api-dashboard
+    container_name: cv-recommender-dashboard
     ports:
       - "8501:8501"
     environment:
