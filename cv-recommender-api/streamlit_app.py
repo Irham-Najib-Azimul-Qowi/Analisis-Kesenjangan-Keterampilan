@@ -128,24 +128,39 @@ DEFAULT_SKILLS = [
 ]
 
 # ==============================================================================
-# 🧠 2. AI PIPELINE INITIALIZATION
+# 🧠 2. AI PIPELINE INITIALIZATION (Inisialisasi Model AI & Caching)
 # ==============================================================================
 @st.cache_resource(show_spinner="Sedang memuat AI Models (BERT & FAISS)...")
 def load_pipeline():
-    # Gunakan path absolut ke folder models untuk mencegah error "No such file or directory" saat di Cloud
+    """
+    Fungsi untuk memuat CVAnalysisPipeline yang berisi model BERT & FAISS.
+    Menggunakan decorator `@st.cache_resource` dari Streamlit agar model AI hanya dimuat 
+    sekali ke dalam memori RAM saat aplikasi pertama kali dijalankan. 
+    Hal ini mencegah aplikasi memuat ulang model yang berat setiap kali user berinteraksi 
+    dengan tombol di UI (mencegah lag dan overhead memori).
+    
+    Return:
+    - CVAnalysisPipeline: Instansi pipeline analisis CV siap pakai.
+    """
+    # Menentukan lokasi absolut folder models agar tidak terjadi error path saat dideploy ke Streamlit Cloud
     base_dir = os.path.dirname(os.path.abspath(__file__))
     model_dir = os.path.join(base_dir, "models")
+    
+    # Instansiasi objek pipeline dengan path model dan nama model embedding dari settings
     return CVAnalysisPipeline(
         model_dir=model_dir,
         embedding_model_name=settings.EMBEDDING_MODEL,
     )
 
 try:
+    # Memuat pipeline AI global
     pipeline = load_pipeline()
+    # Mengambil daftar jabatan yang didukung dari profil standar industri
     roles_options = list(pipeline.job_profiles.keys())
 except Exception as e:
     st.error(f"Gagal memuat model AI: {e}")
     st.stop()
+
 
 
 role_mapping = {r: r.replace("_", " ").title() for r in roles_options}
