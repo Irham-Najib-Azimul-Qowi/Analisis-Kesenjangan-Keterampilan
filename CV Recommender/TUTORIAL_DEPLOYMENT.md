@@ -1,341 +1,175 @@
-# 📦 Tutorial Deployment CV Recommender API
+# 📦 Panduan Lengkap: Tutorial Deployment CV Recommender Dashboard
+**Modul: Pencari Lowongan Kerja & Audit Kesiapan CV Cerdas**  
+*Mata Kuliah / Tim Projek: Semester 4 Politeknik Negeri Madiun (S4 Data Engineering)*
 
-## Panduan Lengkap: Menjalankan Lokal & Deploy Streamlit Dashboard
-
-Semua artefak model ML sudah tersedia di folder `models/` (diunduh menggunakan Git LFS).
-*Catatan: Git LFS (Large File Storage) adalah sistem Git untuk mengunduh file besar dari GitHub ke komputer Anda, bukan nama folder fisik.*
-**Tidak perlu Google Cloud** — cukup clone repo ini dan jalankan.
-
-
+Panduan ini berisi petunjuk lengkap dari dasar untuk menyiapkan, menjalankan, dan melakukan deployment aplikasi dashboard CV Intelligence & Job Matcher baik secara lokal maupun ke layanan cloud production.
 
 ---
 
-## 📋 Daftar Isi
+## 1. Arsitektur Deployment Sistem
 
-1. [Struktur Folder](#1-struktur-folder)
-2. [Menjalankan API Lokal (Tanpa Docker)](#2-menjalankan-api-lokal-tanpa-docker)
-3. [Menjalankan dengan Docker Compose](#3-menjalankan-dengan-docker-compose)
-4. [Deploy Streamlit ke Streamlit Community Cloud (Gratis)](#4-deploy-streamlit-ke-streamlit-community-cloud-gratis)
-5. [Test Endpoint API](#5-test-endpoint-api)
-6. [Monitoring & Maintenance](#6-monitoring--maintenance)
-7. [Troubleshooting](#7-troubleshooting)
+Diagram di bawah ini menggambarkan bagaimana komponen frontend (Streamlit) dan backend (FastAPI/Pipeline) berinteraksi dalam lingkungan production:
+
+```mermaid
+graph LR
+    classDef clientStyle fill:#e6f7ff,stroke:#1890ff,stroke-width:2px;
+    classDef cloudStyle fill:#f6ffed,stroke:#52c41a,stroke-width:2px;
+    classDef storageStyle fill:#fff7e6,stroke:#ffa940,stroke-width:2px;
+
+    User([Pelamar Kerja / Pengguna]) <-->|1. Akses Tampilan Web HTTPS| StreamlitCloud[Streamlit Community Cloud <br> Dashboard Frontend]
+    StreamlitCloud <-->|2. Kirim PDF / Request JSON| BackendAPI[FastAPI / Railway Cloud <br> Backend API Gateway]
+    BackendAPI <-->|3. Hitung Vektor & Irisan| PipelineML[Pipeline ML Engine <br> BERT + FAISS Index]
+    PipelineML <-->|4. Baca Model & Data di RAM| ModelsFolder[Models Folder <br> faiss_job_index.bin <br> job_metadata.csv]
+
+    class User clientStyle;
+    class StreamlitCloud,BackendAPI,PipelineML cloudStyle;
+    class ModelsFolder storageStyle;
+```
 
 ---
 
-## 1. Struktur Folder
+## 2. Persiapan Awal Berkas & Lingkungan Kerja
+
+Sebelum mulai menjalankan kode, pastikan berkas-berkas berikut ini sudah lengkap di komputer Anda:
 
 ```
 CV Recommender/
 ├── app/
-│   ├── __init__.py              # Package init
-│   ├── main.py                  # FastAPI entry point + monitoring + security
-│   ├── pipeline.py              # CVAnalysisPipeline class
-│   ├── skill_utils.py           # Skill extraction & assessment helpers
-│   └── config.py                # Configuration dari env variables
-├── models/                       # ✅ Artefak model ML (sudah terisi)
-│   ├── faiss_job_index.bin      # Indeks FAISS (~160MB, Git LFS)
-│   ├── job_metadata.csv         # Metadata lowongan kerja (~15MB, Git LFS)
-│   ├── job_role_profiles.json   # Profil skill standar per peran
-│   ├── skill_taxonomy.json      # Taksonomi/kamus skill
-│   ├── model_config.json        # Konfigurasi model
-│   ├── assessment_config.json   # Konfigurasi penilaian
-│   └── README.md
-├── .env.example                  # Template environment variables
-├── Dockerfile                    # Docker untuk backend API
-├── Dockerfile.streamlit          # Docker untuk dashboard Streamlit
-├── docker-compose.yml            # Jalankan backend + frontend sekaligus
-├── Machine_Learning.ipynb        # Notebook ML (Part 1-5)
-├── streamlit_app.py              # Dashboard Streamlit
-├── requirements.txt              # Python dependencies
-└── TUTORIAL_DEPLOYMENT.md        # 📖 File yang sedang Anda baca
+│   ├── config.py                # Konfigurasi Pydantic Settings
+│   ├── main.py                  # Entrypoint FastAPI, Endpoint API, & Middleware
+│   ├── pipeline.py              # Logika AI Pipeline (BERT & FAISS)
+│   ├── skill_utils.py           # Ekstraksi keahlian Regex & Kalkulasi Jaccard
+│   └── __init__.py              # Inisialisasi paket python
+├── models/
+│   ├── faiss_job_index.bin      # Indeks FAISS biner (Unduh via Git LFS)
+│   ├── job_metadata.csv         # Metadata lowongan kerja CSV (Unduh via Git LFS)
+│   ├── job_role_profiles.json   # Standar keahlian tiap jabatan industri
+│   ├── skill_taxonomy.json      # Kamus nama keahlian terdaftar
+│   ├── model_config.json        # Konfigurasi Sentence Transformer
+│   ├── assessment_config.json   # Bobot penilaian kategori skill
+│   └── README.md                # Informasi model
+├── .env.example                  # Template variabel lingkungan
+├── Dockerfile                    # Docker build untuk FastAPI backend
+├── Dockerfile.streamlit          # Docker build untuk Streamlit frontend
+├── docker-compose.yml            # Orkestrasi Docker multi-container
+├── streamlit_app.py              # Dashboard utama Streamlit
+├── requirements.txt              # Daftar dependensi modul python
+└── TUTORIAL_DEPLOYMENT.md        # File panduan ini
 ```
-
-> **Semua file sudah lengkap dan siap pakai.** Tinggal clone → install → jalankan.
 
 ---
 
-## 2. Menjalankan API Lokal (Tanpa Docker)
+## 3. Langkah-Langkah Menjalankan secara Lokal (Local Setup)
 
-### 2.1 Clone Repository
+### Langkah 3.1: Unduh Berkas Besar (Git LFS)
+Karena file indeks FAISS (`faiss_job_index.bin` ~160MB) dan metadata lowongan (`job_metadata.csv` ~15MB) berukuran besar, GitHub menyimpannya menggunakan sistem Git LFS.
+1. Pasang Git LFS di komputer Anda jika belum ada:
+   * **Windows:** Unduh installer dari [git-lfs.github.com](https://git-lfs.github.com/).
+   * **Linux/Ubuntu:** Jalankan `sudo apt install git-lfs`.
+2. Buka terminal/Git Bash di dalam direktori repositori Anda, lalu jalankan:
+   ```bash
+   git lfs install
+   git lfs pull
+   ```
+3. Pastikan ukuran file `faiss_job_index.bin` di folder `models/` sudah berukuran asli (~160MB), bukan hanya beberapa KB teks hash.
 
+### Langkah 3.2: Buat & Aktifkan Virtual Environment
+Virtual environment digunakan untuk mengisolasi library proyek agar tidak bentrok dengan library sistem operasi komputer Anda.
 ```bash
-git clone https://github.com/Irham-Najib-Azimul-Qowi/Analisis-Kesenjangan-Keterampilan.git
-cd "Analisis-Kesenjangan-Keterampilan/CV Recommender"
-```
+# Masuk ke direktori modul
+cd "CV Recommender"
 
-> **💡 Catatan Penting tentang Git LFS:** 
-> **Git LFS (Large File Storage)** bukanlah nama folder fisik di dalam proyek. Ini adalah sistem Git untuk mengelola berkas berukuran besar. 
-> Berkas besar tersebut (seperti `faiss_job_index.bin` ~160MB dan `job_metadata.csv` ~15MB) disimpan di dalam folder **`models/`**.
-> Jika Anda mendapati berkas di dalam folder `models/` hanya berukuran beberapa KB (berisi teks hash), silakan unduh berkas aslinya dengan menjalankan perintah berikut di terminal:
-> ```bash
-> git lfs install
-> git lfs pull
-> ```
-
-
-### 2.2 Buat Virtual Environment
-
-```bash
 # Buat virtual environment
-python3 -m venv venv
+python -m venv venv
 
-# Aktifkan
-source venv/bin/activate        # Linux/Mac
-# venv\Scripts\activate         # Windows
+# Aktifkan di Windows (PowerShell)
+.\venv\Scripts\Activate.ps1
+
+# Aktifkan di Windows (CMD)
+.\venv\Scripts\activate
+
+# Aktifkan di Linux / MacOS
+source venv/bin/activate
 ```
 
-### 2.3 Install Dependencies
-
+### Langkah 3.3: Pasang Library Pendukung (Dependencies)
+Pasang seluruh library yang tertulis di `requirements.txt`:
 ```bash
 pip install -r requirements.txt
 ```
+*Catatan: Proses ini dapat memakan waktu 5-10 menit saat pertama kali karena mengunduh PyTorch (`torch`) dan Sentence-Transformers.*
 
-> ⏱️ Instalasi pertama kali bisa memakan waktu 5-10 menit karena `sentence-transformers` dan `torch` cukup besar.
-
-### 2.4 (Opsional) Konfigurasi Environment
-
-```bash
-cp .env.example .env
-# Edit jika perlu (default sudah bisa digunakan untuk development)
-```
-
-### 2.5 Jalankan API Server
-
+### Langkah 3.4: Jalankan Server Backend API (FastAPI)
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
 ```
+Buka browser dan buka `http://localhost:8080/docs` untuk melihat dokumentasi API interaktif (Swagger UI).
 
-**Output yang diharapkan:**
-```
-2026-06-05 10:00:00 [INFO] Menginisialisasi pipeline...
-2026-06-05 10:00:05 [INFO] Pipeline siap: 108,963 lowongan terindeks
-INFO:     Uvicorn running on http://0.0.0.0:8080
-```
-
-### 2.6 Jalankan Streamlit Dashboard (Terminal Kedua)
-
+### Langkah 3.5: Jalankan Dashboard Frontend (Streamlit)
+Buka terminal baru, aktifkan kembali virtual environment, lalu jalankan:
 ```bash
-# Buka terminal baru, aktifkan venv
-source venv/bin/activate
-
-# Jalankan Streamlit
 streamlit run streamlit_app.py
 ```
+Dashboard web secara otomatis terbuka di alamat browser Anda: `http://localhost:8501`.
 
-Dashboard akan terbuka di browser: `http://localhost:8501`
+---
 
-### 2.7 Test API dengan curl
+## 4. Cara Pengujian Endpoint Backend API
 
+Anda dapat menguji apakah backend API berjalan normal menggunakan perintah `curl` di terminal atau Command Prompt:
+
+### 1. Uji Health Check (Status Kesehatan Server)
 ```bash
-# Health check
-curl -s http://localhost:8080/health | python3 -m json.tool
+curl -s http://localhost:8080/health
+```
+**Hasil Respon:** `{"status":"healthy","model_loaded":true}`
 
-# Daftar role yang didukung
-curl -s http://localhost:8080/roles | python3 -m json.tool
-
-# Test analisis CV
+### 2. Uji Analisis CV via Input Teks
+```bash
 curl -s -X POST http://localhost:8080/analyze/text \
   -H "Content-Type: application/json" \
-  -d '{
-    "cv_text": "Data Engineer with 3 years experience in Python, SQL, Apache Spark, Kafka, Docker, AWS.",
-    "target_role": "data_engineer",
-    "top_k": 3
-  }' | python3 -m json.tool
-```
-
-### 2.8 Test via Browser
-
-- **Swagger UI**: http://localhost:8080/docs
-- **ReDoc**: http://localhost:8080/redoc
-
----
-
-## 3. Menjalankan dengan Docker Compose
-
-### 3.1 Prasyarat
-- Docker Desktop sudah terinstal dan berjalan
-
-### 3.2 Jalankan Backend + Frontend
-
-```bash
-cd "CV Recommender"
-
-docker compose up --build
-```
-
-Ini akan menjalankan:
-- **Backend API** di `http://localhost:8080`
-- **Streamlit Dashboard** di `http://localhost:8501`
-
-### 3.3 Jalankan di Background
-
-```bash
-docker compose up --build -d
-docker compose ps          # Cek status
-docker compose logs -f     # Lihat logs
-docker compose down        # Hentikan
+  -d "{\"cv_text\": \"Data Engineer with 3 years experience in Python, SQL, Apache Spark, Kafka, Docker, AWS.\", \"target_role\": \"data_engineer\", \"top_k\": 3}"
 ```
 
 ---
 
-## 4. Deploy Streamlit ke Streamlit Community Cloud (Gratis)
+## 5. Langkah Deployment ke Server Cloud Production
 
-Streamlit Community Cloud adalah layanan hosting **gratis** untuk men-deploy aplikasi Streamlit langsung dari repository GitHub.
+### Opsi A: Deploy Backend API ke Railway (Gratis / Murah)
+1. Buat akun di [railway.app](https://railway.app) dan hubungkan dengan akun GitHub Anda.
+2. Klik **New Project** → **Deploy from GitHub repo**.
+3. Pilih repositori `Analisis-Kesenjangan-Keterampilan`.
+4. Masuk ke **Settings** proyek Railway Anda:
+   * **Root Directory:** Ubah menjadi `CV Recommender`.
+   * **Build Command:** Biarkan default (Railway mendeteksi `requirements.txt`).
+   * **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Salin URL publik domain yang disediakan oleh Railway (misal: `https://cv-api-production.up.railway.app`).
 
-> **⚠️ Penting:** Streamlit Community Cloud hanya men-host **frontend dashboard**. Backend FastAPI harus di-deploy terpisah (lihat Opsi Backend di bawah).
-
-### 4.1 Langkah Deploy Dashboard
-
-#### Langkah 1: Buka Streamlit Community Cloud
-
-1. Buka [share.streamlit.io](https://share.streamlit.io)
-2. Klik **Sign in** dengan akun GitHub
-3. Klik **New App**
-
-#### Langkah 2: Isi Form Deployment
-
-| Field | Nilai |
-|-------|-------|
-| **Repository** | `Irham-Najib-Azimul-Qowi/Analisis-Kesenjangan-Keterampilan` |
-| **Branch** | `main` |
-| **Main file path** | `CV Recommender/streamlit_app.py` |
-
-#### Langkah 3: Konfigurasi Secrets
-
-1. Klik **Advanced settings...** di bagian bawah form
-2. Pilih tab **Secrets**
-3. Tambahkan:
-
-```toml
-BACKEND_URL = "http://ALAMAT_BACKEND_API:8080"
-```
-
-> Ganti `ALAMAT_BACKEND_API` dengan URL publik backend Anda.
-
-#### Langkah 4: Deploy!
-
-Klik **Deploy!** — aplikasi akan aktif dalam beberapa menit di URL seperti `https://your-app.streamlit.app`
-
-### 4.2 Opsi Deploy Backend API (Gratis/Murah)
-
-#### Opsi A: Railway (Recommended — Gratis $5/bulan credit)
-
-1. Buka [railway.app](https://railway.app), login dengan GitHub
-2. **New Project** → **Deploy from GitHub Repo**
-3. Pilih repo `Analisis-Kesenjangan-Keterampilan`
-4. Set root directory ke `CV Recommender`
-5. Set environment: `PORT=8080`
-6. Dapatkan URL publik dari Railway dashboard
-
-#### Opsi B: Render (Gratis tier tersedia)
-
-1. Buka [render.com](https://render.com), login
-2. **New** → **Web Service** → Connect repo
-3. Root Directory: `CV Recommender`
-4. Start Command: `gunicorn app.main:app -w 1 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --timeout 120`
-
-#### Opsi C: Ngrok (Development/Demo saja)
-
-```bash
-# Jalankan backend lokal dulu
-uvicorn app.main:app --port 8080
-
-# Di terminal lain, ekspose ke internet
-ngrok http 8080
-
-# Gunakan URL ngrok sebagai BACKEND_URL di Streamlit Cloud
-```
-
-### 4.3 Update URL Backend
-
-Jika URL backend berubah:
-1. Buka [share.streamlit.io](https://share.streamlit.io)
-2. **Settings** → **Secrets**
-3. Update `BACKEND_URL`
-4. Reboot aplikasi
+### Opsi B: Deploy Dashboard Frontend ke Streamlit Community Cloud (Gratis)
+1. Kunjungi [share.streamlit.io](https://share.streamlit.io) dan masuk menggunakan akun GitHub Anda.
+2. Klik tombol **New App**.
+3. Konfigurasikan form isian deployment sebagai berikut:
+   * **Repository:** `Irham-Najib-Azimul-Qowi/Analisis-Kesenjangan-Keterampilan`
+   * **Branch:** `main`
+   * **Main file path:** `CV Recommender/streamlit_app.py`
+4. Klik tombol **Advanced settings...** di bagian bawah halaman:
+   * Pada tab **Secrets**, tambahkan variabel URL backend API yang didapat dari Railway sebelumnya:
+     ```toml
+     BACKEND_URL = "https://cv-api-production.up.railway.app"
+     ```
+5. Klik **Deploy!**
+6. Aplikasi dashboard Anda sekarang online secara global di URL unik Anda sendiri (misal: `https://cv-matcher.streamlit.app`).
 
 ---
 
-## 5. Test Endpoint API
+## 6. Troubleshooting (Penyelesaian Masalah Umum)
 
-```bash
-API_URL="http://localhost:8080"   # Ganti dengan URL Anda
-
-# Health check
-curl -s $API_URL/health | python3 -m json.tool
-
-# Analisis teks CV
-curl -s -X POST $API_URL/analyze/text \
-  -H "Content-Type: application/json" \
-  -d '{
-    "cv_text": "Data Engineer with 3 years experience in Python, SQL, Apache Spark, Kafka, Docker, AWS.",
-    "target_role": "data_engineer",
-    "top_k": 3
-  }' | python3 -m json.tool
-
-# Upload PDF CV
-curl -s -X POST $API_URL/analyze/pdf \
-  -F "file=@my_cv.pdf" \
-  -F "target_role=data_engineer" \
-  -F "top_k=5" | python3 -m json.tool
-
-# Profil terstruktur
-curl -s -X POST $API_URL/analyze/structured \
-  -H "Content-Type: application/json" \
-  -d '{
-    "skills": ["Python", "SQL", "Docker", "Apache Kafka"],
-    "experience_years": 2,
-    "education": "S1 Informatika",
-    "target_role": "data_engineer",
-    "summary": "Experienced in building data pipelines"
-  }' | python3 -m json.tool
-
-# Metrics
-curl -s $API_URL/metrics | python3 -m json.tool
-```
-
----
-
-## 6. Monitoring & Maintenance
-
-### 6.1 Monitoring Built-in
-
-| Fitur | Endpoint | Keterangan |
-|-------|----------|------------|
-| **Health Check** | `GET /health` | Cek API hidup & model loaded |
-| **Metrics** | `GET /metrics` | Total request, error rate, latensi P95/P99 |
-| **API Key** | Header `X-API-Key` | Aktif jika env `API_KEY` diset |
-
-### 6.2 Kapan Retraining?
-
-| Trigger | Kondisi | Tindakan |
-|---------|---------|----------|
-| Scheduled | Setiap 3 bulan | Jalankan ulang notebook → update models/ |
-| Data Drift | Skill baru >5% | Update `skill_taxonomy.json` |
-| User Feedback | Acceptance <60% | Full retraining |
-
----
-
-## 7. Troubleshooting
-
-| Error | Solusi |
-|-------|--------|
-| `ModuleNotFoundError` | Aktifkan venv: `source venv/bin/activate && pip install -r requirements.txt` |
-| `FileNotFoundError: faiss_job_index.bin` | Jalankan `git lfs install && git lfs pull` |
-| `Container failed to start` | Pastikan `git lfs pull` sudah jalan sebelum build Docker |
-| Dashboard: "API Offline" | Pastikan backend berjalan dan URL benar |
-| `CORS error` | Update `ALLOWED_ORIGINS` di `.env` |
-| `403 API key tidak valid` | Kosongkan `API_KEY` di `.env` (dev) atau cocokkan header |
-| Git LFS smudge error | Install Git LFS: `sudo pacman -S git-lfs` (Arch) / `sudo apt install git-lfs` (Ubuntu) |
-
----
-
-## 📝 Checklist
-
-- [ ] Clone repo dengan Git LFS (`git lfs pull`)
-- [ ] Folder `models/` berisi 6 file artefak
-- [ ] Dependencies terinstal (`pip install -r requirements.txt`)
-- [ ] Backend API berjalan (`/health` → `healthy`)
-- [ ] Streamlit dashboard berjalan di `localhost:8501`
-- [ ] (Opsional) Docker Compose berhasil
-- [ ] (Opsional) Streamlit Community Cloud aktif
+* **Error: `ModuleNotFoundError: No module named 'torchvision'`**
+  * **Penyebab:** Streamlit Cloud versi Python terbaru (3.14) memindai library visual opsional di dalam `transformers` saat startup.
+  * **Solusi:** Kami telah menyisipkan kode *mock* `torchvision` di baris teratas `streamlit_app.py` dan menambahkan `torchvision` ke `requirements.txt` agar library tiruan terpasang di memori RAM otomatis saat startup.
+* **Error: `FileNotFoundError: faiss_job_index.bin`**
+  * **Penyebab:** Berkas besar belum terunduh secara utuh dari Git LFS.
+  * **Solusi:** Jalankan perintah `git lfs install` dan `git lfs pull` pada terminal Git Anda di komputer lokal.
+* **Error: `API Offline` di Dashboard Streamlit**
+  * **Penyebab:** Dashboard tidak dapat menghubungi backend FastAPI.
+  * **Solusi:** Pastikan aplikasi backend FastAPI Anda di Railway sudah aktif, tidak dalam status *suspended*, dan nilai secret `BACKEND_URL` di pengaturan Streamlit Cloud sudah diperbarui ke URL Railway terbaru.
