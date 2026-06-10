@@ -8,3 +8,5 @@ faiss-cpu>=1.8.0
 numpy>=1.24.0
 pdfplumber>=0.11.0
 torch
+torchvision
+
