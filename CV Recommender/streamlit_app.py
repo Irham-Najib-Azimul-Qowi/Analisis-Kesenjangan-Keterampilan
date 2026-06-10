@@ -6,6 +6,26 @@
 # Politeknik Negeri Madiun - S4 Data Engineering
 # ==============================================================================
 
+# --- MOCK TORCHVISION (Mencegah Crash di Streamlit Cloud Python 3.14) ---
+# Di Python 3.14 (Streamlit Cloud), file watcher memindai module path 'transformers' 
+# dan memicu import 'torchvision' (opsional). Kita membuat mock agar tidak crash.
+import sys
+from types import ModuleType
+try:
+    import torchvision
+except ImportError:
+    class MockModule(ModuleType):
+        def __getattr__(self, name):
+            return MockModule(name)
+        def __call__(self, *args, **kwargs):
+            return MockModule("mock")
+    mock_tv = MockModule("torchvision")
+    sys.modules["torchvision"] = mock_tv
+    sys.modules["torchvision.transforms"] = mock_tv
+    sys.modules["torchvision.transforms.v2"] = mock_tv
+    sys.modules["torchvision.ops"] = mock_tv
+    sys.modules["torchvision.ops.boxes"] = mock_tv
+
 # Mengimpor modul bawaan Python 'os' untuk manipulasi path berkas fisik model
 import os
 
