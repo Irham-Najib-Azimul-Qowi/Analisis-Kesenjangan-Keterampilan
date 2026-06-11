@@ -75,35 +75,7 @@ career-readiness-analytics/
 
 ## 🏗️ Alur Data & Pipeline ETL
 
-```mermaid
-flowchart TD
-    subgraph "Pengambilan Data"
-        ONET["Database O*NET Excel"] -->|Ekstraksi Standar Akademik| AnalysisNB["analysis.ipynb"]
-        Adzuna["Adzuna Jobs CSV"] -->|Ekstraksi Keahlian Industri| AnalysisNB
-        BigQuery["GCP BigQuery"] -->|Query Lowongan Kerja| MLNB["Machine_Learning.ipynb"]
-    end
-
-    subgraph "Pemrosesan & Modelling"
-        AnalysisNB -->|Kalkulasi Gap Score| GapCSV["skill_gap_analysis.csv"]
-        MLNB -->|Sentence-BERT Embedding| FAISS["faiss_job_index.bin"]
-        MLNB -->|Extract Metadata| JobMeta["job_metadata.csv"]
-    end
-
-    subgraph "Penyajian (Serving)"
-        GapCSV -->|Visualisasi Data| GapApp["gap_analysis/app.py"]
-        FAISS -->|Pencarian Semantik| CVApp["cv_recommender/streamlit_app.py"]
-        JobMeta -->|Detil Lowongan| CVApp
-    end
-
-    style ONET fill:#e1f5fe,stroke:#01579b
-    style Adzuna fill:#e8f5e9,stroke:#1b5e20
-    style BigQuery fill:#fff3e0,stroke:#e65100
-    style GapCSV fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style FAISS fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style JobMeta fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style GapApp fill:#0288d1,color:#fff
-    style CVApp fill:#e65100,color:#fff
-```
+![Alur Data & Pipeline ETL](diagram%20career%20readlines.svg)
 
 ### 1. Extract (Pengambilan Data)
 * **Data Akademik:** Diambil dari O*NET Database (file excel seperti `Skills.xlsx` dan `Technology Skills.xlsx` di `gap_analysis/db_30_2_excel/`).

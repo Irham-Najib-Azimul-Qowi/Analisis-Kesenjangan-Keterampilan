@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="550" viewBox="0 0 900 550" fill="none">
+  <style>
+    .bg { fill: #0f172a; }
+    .subgraph { fill: #1e293b; stroke: #334155; stroke-width: 1.5; rx: 12px; }
+    .subgraph-title { fill: #f8fafc; font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.05em; }
+    .node-extract { fill: url(#grad-extract); filter: url(#shadow); rx: 8px; }
+    .node-transform { fill: url(#grad-transform); filter: url(#shadow); rx: 8px; }
+    .node-transform-sub { fill: url(#grad-transform-sub); filter: url(#shadow); rx: 6px; }
+    .node-serving { fill: url(#grad-serving); filter: url(#shadow); rx: 8px; }
+    .node-text-title { fill: #ffffff; font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+    .node-text-desc { fill: #e2e8f0; font-family: system-ui, -apple-system, sans-serif; font-size: 10px; text-anchor: middle; dominant-baseline: middle; }
+    .node-text-sub { fill: #ffffff; font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; }
+    .edge { stroke: #64748b; stroke-width: 2; fill: none; }
+    .edge-label { fill: #94a3b8; font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 500; text-anchor: middle; dominant-baseline: middle; }
+  </style>
+
+  <defs>
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748b" />
+    </marker>
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-10%" y="-10%" w="120%" h="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+    <!-- Gradients -->
+    <linearGradient id="grad-extract" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="grad-transform" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#c2410c" />
+    </linearGradient>
+    <linearGradient id="grad-transform-sub" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#9a3412" />
+    </linearGradient>
+    <linearGradient id="grad-serving" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="550" rx="16" class="bg" />
+
+  <!-- SUBGRAPH 1: PENGAMBILAN DATA -->
+  <rect x="30" y="30" width="240" height="490" class="subgraph" />
+  <text x="150" y="55" class="subgraph-title" text-anchor="middle">PENGAMBILAN DATA (EXTRACT)</text>
+
+  <!-- Node 1: ONET -->
+  <g>
+    <rect x="50" y="80" width="200" height="75" class="node-extract" />
+    <text x="150" y="110" class="node-text-title">Database O*NET Excel</text>
+    <text x="150" y="130" class="node-text-desc">Standar Kurikulum Akademik</text>
+  </g>
+
+  <!-- Node 2: Adzuna -->
+  <g>
+    <rect x="50" y="215" width="200" height="75" class="node-extract" />
+    <text x="150" y="245" class="node-text-title">Adzuna Jobs CSV</text>
+    <text x="150" y="265" class="node-text-desc">Kebutuhan Industri Riil</text>
+  </g>
+
+  <!-- Node 3: BigQuery -->
+  <g>
+    <rect x="50" y="350" width="200" height="75" class="node-extract" />
+    <text x="150" y="380" class="node-text-title">GCP BigQuery</text>
+    <text x="150" y="400" class="node-text-desc">Database Lowongan Kerja</text>
+  </g>
+
+
+  <!-- SUBGRAPH 2: PEMROSESAN & MODELLING -->
+  <rect x="310" y="30" width="280" height="490" class="subgraph" />
+  <text x="450" y="55" class="subgraph-title" text-anchor="middle">PEMROSESAN &amp; MODELLING (TRANSFORM)</text>
+
+  <!-- Node 4: analysis.ipynb -->
+  <g>
+    <rect x="330" y="80" width="240" height="75" class="node-transform" />
+    <text x="450" y="110" class="node-text-title">analysis.ipynb</text>
+    <text x="450" y="130" class="node-text-desc">Pembersihan &amp; Kalkulasi Gap</text>
+  </g>
+
+  <!-- Node 6: skill_gap_analysis.csv -->
+  <g>
+    <rect x="350" y="225" width="200" height="55" class="node-transform-sub" />
+    <text x="450" y="252" class="node-text-sub">skill_gap_analysis.csv</text>
+  </g>
+
+  <!-- Node 5: Machine_Learning.ipynb -->
+  <g>
+    <rect x="330" y="335" width="240" height="75" class="node-transform" />
+    <text x="450" y="365" class="node-text-title">Machine_Learning.ipynb</text>
+    <text x="450" y="385" class="node-text-desc">Sentence-BERT &amp; FAISS Indexing</text>
+  </g>
+
+  <!-- Node 7: faiss_job_index.bin -->
+  <g>
+    <rect x="330" y="445" width="115" height="50" class="node-transform-sub" />
+    <text x="387.5" y="470" class="node-text-sub">faiss_job_index.bin</text>
+  </g>
+
+  <!-- Node 8: job_metadata.csv -->
+  <g>
+    <rect x="455" y="445" width="115" height="50" class="node-transform-sub" />
+    <text x="512.5" y="470" class="node-text-sub">job_metadata.csv</text>
+  </g>
+
+
+  <!-- SUBGRAPH 3: PENYAJIAN (SERVING) -->
+  <rect x="630" y="30" width="240" height="490" class="subgraph" />
+  <text x="750" y="55" class="subgraph-title" text-anchor="middle">PENYAJIAN (LOAD &amp; SERVING)</text>
+
+  <!-- Node 9: Gap Dashboard -->
+  <g>
+    <rect x="650" y="215" width="200" height="75" class="node-serving" />
+    <text x="750" y="245" class="node-text-title">gap_analysis/app.py</text>
+    <text x="750" y="265" class="node-text-desc">Dashboard Kesenjangan Skill</text>
+  </g>
+
+  <!-- Node 10: CV App -->
+  <g>
+    <rect x="650" y="390" width="200" height="75" class="node-serving" />
+    <text x="750" y="420" class="node-text-title">cv_recommender/streamlit_app.py</text>
+    <text x="750" y="440" class="node-text-desc">CV Intelligence &amp; Job Matcher</text>
+  </g>
+
+
+  <!-- EDGES / CONNECTIONS -->
+
+  <!-- ONET -> analysis.ipynb -->
+  <path d="M 250 117.5 L 322 117.5" class="edge" marker-end="url(#arrow)" />
+  <text x="286" y="107" class="edge-label">Akademik</text>
+
+  <!-- Adzuna -> analysis.ipynb (orthogonal path) -->
+  <path d="M 250 252.5 L 290 252.5 L 290 132.5 L 322 132.5" class="edge" marker-end="url(#arrow)" />
+  <text x="286" y="242" class="edge-label">Industri</text>
+
+  <!-- BigQuery -> Machine_Learning.ipynb -->
+  <path d="M 250 387.5 L 322 387.5" class="edge" marker-end="url(#arrow)" />
+  <text x="286" y="377" class="edge-label">Query</text>
+
+  <!-- analysis.ipynb -> skill_gap_analysis.csv -->
+  <path d="M 450 155 L 450 217" class="edge" marker-end="url(#arrow)" />
+  <text x="480" y="185" class="edge-label">Gap Score</text>
+
+  <!-- Machine_Learning.ipynb -> faiss_job_index.bin & job_metadata.csv -->
+  <path d="M 450 410 L 450 430" class="edge" />
+  <path d="M 450 430 L 387.5 430 L 387.5 437" class="edge" marker-end="url(#arrow)" />
+  <path d="M 450 430 L 512.5 430 L 512.5 437" class="edge" marker-end="url(#arrow)" />
+  <text x="475" y="425" class="edge-label">Export</text>
+
+  <!-- skill_gap_analysis.csv -> gap_analysis/app.py -->
+  <path d="M 550 252.5 L 642 252.5" class="edge" marker-end="url(#arrow)" />
+  <text x="596" y="242" class="edge-label">Visualisasi</text>
+
+  <!-- faiss_job_index.bin & job_metadata.csv -> cv_recommender/streamlit_app.py -->
+  <path d="M 387.5 495 L 387.5 510 L 610 510 L 610 435 L 642 435" class="edge" marker-end="url(#arrow)" />
+  <path d="M 512.5 495 L 512.5 505 L 610 505" class="edge" />
+  <text x="600" y="495" class="edge-label">Load Model &amp; Meta</text>
+
+</svg>
