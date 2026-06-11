@@ -7,8 +7,8 @@ Repositori ini dirancang agar Anda dapat men-deploy **dua aplikasi Streamlit ter
 ## 🏗️ Struktur Aplikasi
 
 Repositori ini memiliki dua aplikasi utama:
-1. **CV Recommender** (`CV Recommender/streamlit_app.py`) — Sistem rekomendasi lowongan kerja berbasis CV.
-2. **Gap Analysis** (`Gap Analysis/app.py`) — Dashboard analisis kesenjangan skill.
+1. **CV Recommender** (`cv_recommender/streamlit_app.py`) — Sistem rekomendasi lowongan kerja berbasis CV.
+2. **Gap Analysis** (`gap_analysis/app.py`) — Dashboard analisis kesenjangan skill.
 
 ---
 
@@ -47,9 +47,9 @@ Anda akan membuat **dua aplikasi berbeda** di dashboard Streamlit Cloud mengguna
 2. Masukkan detail berikut:
    * **Repository:** Pilih repositori GitHub Anda (misal: `username/Analisis-Kesenjangan-Keterampilan`).
    * **Branch:** `main` (atau branch utama Anda).
-   * **Main file path:** `CV Recommender/streamlit_app.py`
+   * **Main file path:** `cv_recommender/streamlit_app.py`
 3. Klik **Deploy!**
-   * *Streamlit akan otomatis mendeteksi dan menginstal library di `CV Recommender/requirements.txt`.*
+   * *Streamlit akan otomatis mendeteksi dan menginstal library di `cv_recommender/requirements.txt`.*
 
 ### App 2: Gap Analysis Dashboard
 
@@ -57,9 +57,9 @@ Anda akan membuat **dua aplikasi berbeda** di dashboard Streamlit Cloud mengguna
 2. Masukkan detail berikut:
    * **Repository:** Pilih repositori GitHub yang sama.
    * **Branch:** `main` (atau branch utama Anda).
-   * **Main file path:** `Gap Analysis/app.py`
+   * **Main file path:** `gap_analysis/app.py`
 3. Klik **Deploy!**
-   * *Streamlit akan otomatis mendeteksi dan menginstal library di `Gap Analysis/requirements.txt`.*
+   * *Streamlit akan otomatis mendeteksi dan menginstal library di `gap_analysis/requirements.txt`.*
 
 ---
 
@@ -69,12 +69,12 @@ Jika Anda ingin menjalankan aplikasi secara lokal di komputer Anda:
 
 ### Menjalankan CV Recommender:
 ```bash
-cd "CV Recommender"
+cd "cv_recommender"
 streamlit run streamlit_app.py
 ```
 
 ### Menjalankan Gap Analysis:
 ```bash
-cd "Gap Analysis"
+cd "gap_analysis"
 streamlit run app.py
 ```

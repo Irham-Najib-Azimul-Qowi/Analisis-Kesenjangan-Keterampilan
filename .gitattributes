@@ -1,2 +1,2 @@
-"CV Recommender/models/*.bin" filter=lfs diff=lfs merge=lfs -text
-"CV Recommender/models/job_metadata.csv" filter=lfs diff=lfs merge=lfs -text
+cv_recommender/models/*.bin filter=lfs diff=lfs merge=lfs -text
+cv_recommender/models/job_metadata.csv filter=lfs diff=lfs merge=lfs -text

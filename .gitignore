@@ -23,8 +23,8 @@ Thumbs.db
 
 # Kredensial (JANGAN PERNAH di-commit)
 *.json
-!CV Recommender/models/*.json
-!Gap Analysis/*.json
+!cv_recommender/models/*.json
+!gap_analysis/*.json
 
 # Virtual environment
 venv/
