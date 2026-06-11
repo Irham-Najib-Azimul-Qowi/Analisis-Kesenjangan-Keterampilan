@@ -75,7 +75,7 @@ career-readiness-analytics/
 
 ## 🏗️ Alur Data & Pipeline ETL
 
-![Alur Data & Pipeline ETL](diagram%20career%20readlines.svg)
+![Alur Data & Pipeline ETL](diagram%20career%20readlines.png)
 
 ### 1. Extract (Pengambilan Data)
 * **Data Akademik:** Diambil dari O*NET Database (file excel seperti `Skills.xlsx` dan `Technology Skills.xlsx` di `gap_analysis/db_30_2_excel/`).
