@@ -29,7 +29,7 @@ Buka `analysis.ipynb` di Jupyter Notebook dan jalankan semua cell. Notebook ini 
 
 ### 2. Jalankan Dashboard
 ```bash
-cd "Gap Analysis"
+cd gap_analysis
 streamlit run app.py
 ```
 

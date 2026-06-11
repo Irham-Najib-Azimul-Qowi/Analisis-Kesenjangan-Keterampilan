@@ -59,7 +59,7 @@ Rata-rata tertimbang dari 4 kategori skill:
 
 ```bash
 # Masuk ke folder CV Recommender
-cd "CV Recommender"
+cd cv_recommender
 
 # Jalankan dashboard Streamlit
 streamlit run streamlit_app.py
