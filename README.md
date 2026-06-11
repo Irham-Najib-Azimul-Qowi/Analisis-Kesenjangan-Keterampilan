@@ -78,20 +78,20 @@ career-readiness-analytics/
 ```mermaid
 flowchart TD
     subgraph Pengambilan Data
-        ONET[Database O*NET Excel] -->|Ekstraksi Standar Akademik| AnalysisNB[analysis.ipynb]
-        Adzuna[Adzuna Jobs CSV] -->|Ekstraksi Keahlian Industri| AnalysisNB
-        BigQuery[GCP BigQuery] -->|Query Lowongan Kerja| MLNB[Machine_Learning.ipynb]
+        ONET["Database O*NET Excel"] -->|Ekstraksi Standar Akademik| AnalysisNB["analysis.ipynb"]
+        Adzuna["Adzuna Jobs CSV"] -->|Ekstraksi Keahlian Industri| AnalysisNB
+        BigQuery["GCP BigQuery"] -->|Query Lowongan Kerja| MLNB["Machine_Learning.ipynb"]
     end
 
     subgraph Pemrosesan & Modelling
-        AnalysisNB -->|Kalkulasi Gap Score| GapCSV[skill_gap_analysis.csv]
-        MLNB -->|Sentence-BERT Embedding| FAISS[faiss_job_index.bin]
-        MLNB -->|Extract Metadata| JobMeta[job_metadata.csv]
+        AnalysisNB -->|Kalkulasi Gap Score| GapCSV["skill_gap_analysis.csv"]
+        MLNB -->|Sentence-BERT Embedding| FAISS["faiss_job_index.bin"]
+        MLNB -->|Extract Metadata| JobMeta["job_metadata.csv"]
     end
 
     subgraph Penyajian (Serving)
-        GapCSV -->|Visualisasi Data| GapApp[gap_analysis/app.py]
-        FAISS -->|Pencarian Semantik| CVApp[cv_recommender/streamlit_app.py]
+        GapCSV -->|Visualisasi Data| GapApp["gap_analysis/app.py"]
+        FAISS -->|Pencarian Semantik| CVApp["cv_recommender/streamlit_app.py"]
         JobMeta -->|Detil Lowongan| CVApp
     end
 
