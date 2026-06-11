@@ -1,5 +1,5 @@
 # DATA-ENGINEERING  
-# Proyek : Analisis Kesenjangan Keterampilan (Skill Gap Analysis) Berbasis ATS
+# Proyek: Intelligence Analisis Kesenjangan Keterampilan & Rekomendasi Lowongan Kerja (Skill Gap & CV Matcher)
 
 ---
 
@@ -7,96 +7,83 @@
 
 | Nama Lengkap                       | NIM         | Peran                |
 |------------------------------------|-------------|----------------------|
-| Irham Najib Azimul Qowi   | 244311045   | Data Engineer        |
-| Andrian Maulana           | 244311036   | Project Manager      |
-| Raufa Hafid Widodo        | 244311052   | Data Analyst         |
+| Irham Najib Azimul Qowi            | 244311045   | Data Engineer        |
+| Andrian Maulana                    | 244311036   | Project Manager      |
+| Raufa Hafid Widodo                 | 244311052   | Data Analyst         |
 
 ---
 
 ## Deskripsi Proyek  
-Proyek ini dikembangkan untuk mengevaluasi CV pencari kerja menggunakan sistem berbasis ATS (Applicant Tracking System) dan membandingkannya dengan kebutuhan pasar kerja. Tujuan utamanya adalah untuk mengidentifikasi kesenjangan keterampilan (skill gap) pelamar dengan menganalisis data kompetensi O*NET dan data lowongan pekerjaan aktual dari Adzuna. Selain itu, proyek ini dirancang untuk memberikan insight terperinci mengenai keterampilan spesifik yang perlu ditingkatkan oleh pengguna agar sesuai dengan posisi yang dilamar.
+Proyek ini dikembangkan sebagai sistem cerdas terintegrasi untuk membantu pencari kerja mengidentifikasi kesenjangan keterampilan (*skill gap*) mereka terhadap standar industri, sekaligus memberikan rekomendasi lowongan pekerjaan yang paling cocok dengan profil CV mereka. 
+
+Proyek ini terdiri dari dua modul dashboard interaktif:
+1. **Gap Analysis Dashboard:** Memetakan gap kompetensi antara standar kurikulum akademik (O*NET) dengan tuntutan riil pasar kerja (Adzuna).
+2. **CV Recommender System:** Mencari lowongan pekerjaan yang paling relevan dengan CV pelamar menggunakan kombinasi kemiripan makna (*semantik BERT*) dan pencocokan keahlian (*Jaccard Similarity*).
 
 ---
 
-## Manfaat Data / Use Case  
-- **Tujuan Proyek:** Menyediakan platform evaluasi CV terintegrasi yang mampu membedah keahlian pelamar dan mendeteksi kesenjangan keterampilan secara sistematis berdasarkan standar industri.
-- **Manfaat:**  
-  - Memberikan umpan balik langsung kepada pencari kerja mengenai kelemahan dan kelebihan profil mereka.  
-  - Membantu pencari kerja mengidentifikasi keterampilan spesifik yang harus dipelajari.
-  - Hasil pemrosesan data (ETL) mendukung dasbor visualisasi interaktif pada aplikasi Streamlit, dirancang dengan memperhatikan prinsip aksesibilitas UI/UX seperti kemudahan navigasi dan mode gelap (*dark mode*).
+## 🚀 Live Demo Aplikasi (Streamlit Share)
+Aplikasi ini dideploy sebagai dua layanan terpisah yang saling melengkapi:
+* 📊 **Dashboard Analisis Kesenjangan Skill (Gap Analysis):** [https://gapskillsanalysis.streamlit.app/](https://gapskillsanalysis.streamlit.app/)
+* 💼 **Sistem Pencocokan & Rekomendasi Lowongan (CV Recommender):** [https://jobrecommenderai.streamlit.app/](https://jobrecommenderai.streamlit.app/)
 
 ---
 
-## Serving Analisis  
-Data hasil ETL (Extract, Transform, Load) disimpan dalam format CSV yang terstruktur (termasuk `cached_data.csv` dan `adzuna_jobs.csv`) dan divisualisasikan melalui framework **Streamlit**. Pendekatan ini memungkinkan pengguna untuk berinteraksi langsung melalui antarmuka web, melihat visualisasi perbandingan keterampilan, dan membaca laporan analisis secara *real-time*.
+## 🏗️ Alur Data & Pipeline ETL
 
-## Serving Machine Learning  
-Dataset bersih yang berisi daftar keterampilan dan persyaratan lowongan digunakan sebagai dasar algoritma pencocokan teks (Text Matching) dan ekstraksi informasi. Sistem menggunakan teknik pemrosesan bahasa alami (NLP) untuk melakukan parsing pada CV, mengidentifikasi entitas keterampilan, lalu menghitung tingkat kecocokan (*similarity score*) antara profil pengguna dengan dataset pekerjaan untuk menentukan skor akhir.
+### 1. Extract (Pengambilan Data)
+* **Data Akademik:** Diambil dari database O*NET (file Excel dalam `gap_analysis/db_30_2_excel/` seperti `Skills.xlsx` dan `Technology Skills.xlsx`).
+* **Data Industri:** Menggunakan database lowongan kerja Adzuna (`gap_analysis/adzuna_jobs.csv`) dan data lowongan kerja gabungan dari BigQuery.
 
----
+### 2. Transform (Pembersihan & Pengolahan)
+* **Gap Analysis Pipeline:** Seluruh pembersihan data akademik, ekstraksi kata kunci keahlian dari deskripsi pekerjaan, kalkulasi skor kesenjangan (*industry_norm - academic_norm*), hingga ekspor data hasil akhir diolah melalui notebook [gap_analysis/analysis.ipynb](file:///d:/folder_pnm/s4%20-%20data%20engineering/Team%20Projek/uas/gap_analysis/analysis.ipynb).
+* **Machine Learning Pipeline:** Pengunduhan data 108.940 baris lowongan kerja dari GCP BigQuery, pembersihan teks, pembuatan representasi vektor numerik 384 dimensi (*sentence embedding*) menggunakan model BERT `all-MiniLM-L6-v2`, hingga evaluasi model diolah di notebook [cv_recommender/Machine_Learning.ipynb](file:///d:/folder_pnm/s4%20-%20data%20engineering/Team%20Projek/uas/cv_recommender/Machine_Learning.ipynb).
 
-# Pipeline
-## Extract ( Pengambilan Data ) 
-- **Sumber Data:**  
-  - Data Keterampilan & Kompetensi – Database O*NET (File Excel di dalam folder `db_30_2_excel/` seperti `Abilities.xlsx`, `Abilities to Work Activities.xlsx`, dll).
-  - Data Lowongan Pekerjaan – Dataset Adzuna Jobs (`adzuna_jobs.csv`).
-
-- **Metode Pengambilan:**  
-**Local Data Extraction:**  
-    - Membaca file `.csv` dan `.xlsx` secara lokal menggunakan pustaka `pandas`.
-    - Data di-*load* ke dalam DataFrame untuk memetakan hubungan antara jenis pekerjaan, taksonomi keterampilan O*NET, dan frekuensi kemunculan keterampilan di lowongan pasar.
+### 3. Load & Serving
+* Data kesenjangan disimpan ke `gap_analysis/skill_gap_analysis.csv` untuk divisualisasikan oleh dashboard `gap_analysis/app.py`.
+* Indeks pencarian semantik cepat disimpan ke file biner index FAISS `cv_recommender/models/faiss_job_index.bin` beserta metadata lowongannya di `cv_recommender/models/job_metadata.csv` untuk disajikan oleh `cv_recommender/streamlit_app.py`.
 
 ---
 
-## Transform ( Pembersihan & Transformasi )   
-- **Pembersihan:**  
-  - Skrip pembersihan terdedikasi (`clean_data.py`) digunakan untuk membuang duplikasi, mengatasi baris kosong (`missing values`), dan menstandarkan format teks.
-  - Penyelarasan format agar data struktural dari O*NET selaras dengan format deskripsi dari sumber Adzuna.
+## 🛠️ Struktur Repositori Kode
 
-- **Transformasi:**  
-  - Menggabungkan berbagai atribut keterampilan menjadi satu dataset referensi tunggal.
-  - Mengkonversi format mentah ke dalam bentuk ringkasan (cache) yang lebih ringan agar dapat dieksekusi dengan cepat oleh model pencocokan.
-
----
-
-## Load ( Pemindahan ke Target ) 
-- **Target:**  
-  - Hasil pembersihan dan transformasi dimuat ke dalam file `cached_data.csv`. File ini bertindak sebagai basis data statis *in-memory* yang memicu visualisasi di aplikasi Streamlit.
-
-- **Metode:**  
-  - Menggunakan fungsi `to_csv()` dari pandas untuk menyimpan dataset bersih.
-  - Saat aplikasi dijalankan, data diload menggunakan konfigurasi *caching* Streamlit untuk menghindari pemrosesan ulang setiap kali ada interaksi pengguna di UI, sehingga performa *load* aplikasi menjadi sangat ringan.
-
----
-
-## Arsitektur / Workflow ETL  
-- **Alur Modular:**  
-  - Proses ETL dienkapsulasi dalam file `clean_data.py`.
-  - Data keluaran kemudian dikonsumsi secara langsung oleh `app.py` yang menjadi *entry-point* aplikasi web Streamlit.
-  - Direktori `.streamlit/` memuat file `config.toml` untuk mengatur tampilan estetika (UI) dari arsitektur aplikasi (seperti penerapan tema gelap).
-
-- **Tools yang Digunakan:**  
-  - Python 3.x
-  - Library: `pandas`, `numpy`, `streamlit` (untuk UI), dan pustaka NLP/Machine Learning terkait.
-  - Platform: Localhost Streamlit
+```directory
+uas/
+├── cv_recommender/               # Modul Sistem Rekomendasi CV
+│   ├── .gitattributes            # Konfigurasi LFS untuk model biner besar
+│   ├── DOCUMENTATION.md          # Dokumentasi teknis model AI
+│   ├── Machine_Learning.ipynb    # Notebook pelatihan & pembuatan model
+│   ├── model_utils.py            # Logika inti ML (BERT & FAISS)
+│   ├── streamlit_app.py          # Dashboard antarmuka pengguna
+│   ├── requirements.txt          # Dependensi library python
+│   └── models/                   # Folder hasil training model (FAISS, Metadata CSV)
+│
+├── gap_analysis/                 # Modul Dashboard Kesenjangan Skill
+│   ├── README.md                 # Dokumentasi pendukung analisis
+│   ├── analysis.ipynb            # Notebook pembersihan & pemrosesan data
+│   ├── app.py                    # Dashboard visualisasi interaktif
+│   ├── requirements.txt          # Dependensi dashboard analisis
+│   ├── adzuna_jobs.csv           # Sumber data mentah industri
+│   ├── skill_gap_analysis.csv    # Output data kesenjangan terhitung
+│   └── db_30_2_excel/            # Database data referensi O*NET
+│
+├── Pipeline/                     # Pipeline ETL ke Aiven Kafka (Tidak Diubah)
+├── DEPLOY.md                     # Panduan lengkap deployment cloud
+└── README.md                     # Dokumentasi utama proyek
+```
 
 ---
 
-## Kode Program  
-- **Struktur Kode:**  
-  - `app.py`: File utama aplikasi Streamlit.
-  - `clean_data.py`: Pipeline untuk transformasi dan pembersihan data.
-  - `adzuna_jobs.csv` & `cached_data.csv`: File data operasional.
-  - `db_30_2_excel/`: Repositori file referensi dari O*NET.
-    
-- **Machine Learning:**  
-  - Model Utama: NLP berbasis Similarity Matching.
-  - Fitur Ekstraksi: Mengidentifikasi kata kunci (keterampilan teknis dan *soft skill*) dari input teks CV.
-  - Logika Kesenjangan: Menampilkan perbedaan matematis antara keterampilan yang terdeteksi dengan tuntutan dataset pekerjaan.
+## 💻 Cara Menjalankan Secara Lokal
 
-- **Link Projek:** 
-  - StreamLit : https://skillgapanalysis.streamlit.app/
-  - ETL Pipeline :
-  - Machine Learning :
+### Menjalankan Dashboard Gap Analysis:
+```bash
+cd gap_analysis
+streamlit run app.py
+```
 
----
+### Menjalankan CV Recommender:
+```bash
+cd cv_recommender
+streamlit run streamlit_app.py
+```
