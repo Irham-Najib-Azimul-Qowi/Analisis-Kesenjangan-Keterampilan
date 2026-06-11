@@ -19,3 +19,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Kredensial (JANGAN di-commit)
+*.json
+!models/*.json

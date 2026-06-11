@@ -12,6 +12,7 @@ env/
 # IDE
 .vscode/
 .idea/
+.gemini/
 
 # OS
 .DS_Store
@@ -19,3 +20,11 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Kredensial (JANGAN PERNAH di-commit)
+*.json
+!CV Recommender/models/*.json
+!Gap Analysis/*.json
+
+# Virtual environment
+venv/

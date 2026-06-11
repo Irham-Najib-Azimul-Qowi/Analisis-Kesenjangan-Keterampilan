@@ -9,10 +9,13 @@ venv/
 ENV/
 env/
 
-# Streamlit local configs/secrets (just in case)
+# Streamlit local secrets
 .streamlit/secrets.toml
 
 # OS generated files
 .DS_Store
 Thumbs.db
-postings.csv
+
+# Kredensial (JANGAN di-commit)
+.env
+*.json
