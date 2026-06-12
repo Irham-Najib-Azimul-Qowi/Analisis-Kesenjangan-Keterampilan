@@ -10,7 +10,7 @@ Proyek Akhir Data Engineering: Sistem Analisis Kesenjangan Keterampilan (*Skill 
 | :--- | :--- | :--- |
 | **Irham Najib Azimul Qowi** | 244311045 | Data Engineer |
 | **Andrian Maulana** | 244311036 | Project Manager |
-| **Raufa Hafid Widodo** | 244311052 | Data Analyst |
+| **Muhammad Raufa Hafid Widodo** | 244311052 | Data Analyst |
 
 ---
 
